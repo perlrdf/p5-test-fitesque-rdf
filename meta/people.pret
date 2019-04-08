@@ -1,0 +1,10 @@
+# This file contains data about the project developers.
+
+@prefix : <http://xmlns.com/foaf/0.1/>.
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix result: <http://git2prov.org/git2prov?giturl=https%3A%2F%2Fgithub.com%2Fkjetilk%2Fp5-test-fitesque-rdf&serialization=PROV-O#> .
+
+cpan:KJETILK
+  :name  "Kjetil Kjernsmo";
+  owl:sameAs result:user-Kjetil Kjernsmo.
+
