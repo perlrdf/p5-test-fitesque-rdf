@@ -4,7 +4,7 @@
 
 =head1 PURPOSE
 
-Test that Test::FITesque::Test::RDF compiles.
+Unit test that Test::FITesque::Test::RDF transforms data correctly from RDF
 
 =head1 AUTHOR
 
@@ -24,10 +24,23 @@ This is free software, licensed under:
 use strict;
 use warnings;
 use Test::More;
+use FindBin qw($Bin);
+
+
+my $file = $Bin . '/data/rdf-fixtures.ttl';
+
 
 use_ok('Test::FITesque::Test::RDF');
 
-diag( "Testing Test::FITesque::Test::RDF $Test::FITesque::Test::RDF::VERSION, Perl $], $^X" );
+my $t = Test::FITesque::Test::RDF->new(source => $file,
+													param_ns => 'http://example.org/my-parameters#');
+
+warn Dumper $t->_transform;
+
+
+
+
+
 
 done_testing;
 
