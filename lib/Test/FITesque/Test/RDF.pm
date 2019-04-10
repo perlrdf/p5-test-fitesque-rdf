@@ -7,6 +7,69 @@ package Test::FITesque::Test::RDF;
 our $AUTHORITY = 'cpan:KJETILK';
 our $VERSION   = '0.001';
 
+use Moo;
+use Attean::RDF;
+use Path::Tiny;
+use URI::NamespaceMap;
+use Test::FITesque::Test;
+use Types::Namespace qw(Namespace);
+use Types::Path::Tiny qw(Path);
+
+extends 'Test::FITesque::Test';
+
+
+has source => (
+					is      => 'ro',
+					isa     => Path, # TODO: Generalize to URLs
+					required => 1,
+					coerce  => 1,
+				  );
+
+
+has param_ns => (
+					  is => "ro",
+					  isa => Namespace,
+					  required => 1,
+					  coerce => 1,
+					 );
+
+
+around 'new' => sub {
+  my $orig = shift;
+  my $self = shift;
+  my $ns = URI::NamespaceMap->new(['deps', 'dc']);
+  $ns->add_mapping(test => 'http://example.org/test-fixtures#'); # TODO: Get a proper URI
+  $ns->add_mapping(param => $self->param_ns);
+  my $parser = Attean->get_parser(filename => $self->source)->new();
+  my $model = Attean->temporary_model;
+  $model->add_iter($parser->parse_iter_from_io( $self->source->openr_utf8 )->as_quads(iri('http://example.org/graph'))); # TODO: Use a proper URI for graph
+
+  my $tests_uri_iter = $model->objects(undef, iri($ns->test->fixtures->as_string));
+
+  my @data;
+  
+  while (my $test_uri = $tests_uri_iter->next) {
+	 my $handler = $model->objects($test_uri, iri($ns->test->handler->as_string))->next;
+	 push(@data, [$handler->value]);
+	 my $id = $model->objects($test_uri, iri($ns->dc->identifier->as_string))->next;
+	 my $expects_iter = $model->objects($test_uri, iri($ns->test->expects->as_string));
+	 while (my $expect_sub = $expects_iter->next) {
+		my $expectations_iter = $model->get_quads($expect_sub);
+		my %params;
+		while (my $expect = $expectations_iter->next) {
+		  my $param = $self->param_ns->local_part($expect->predicate);
+		  my $value = $expect->object->value;
+		  $params{$param} = $value;
+		}
+		push(@data, [$id->value, %params])
+	 }
+  }
+  
+  
+  print Dumper(\@data);
+  $self->$orig({data => \@data});
+};
+
 1;
 
 __END__
