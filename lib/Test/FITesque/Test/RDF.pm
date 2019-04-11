@@ -45,7 +45,7 @@ sub transform_rdf {
 	 my $handler = $model->objects($test_uri, iri($ns->test->handler->as_string))->next;
 	 push(@data, [$handler->value]);
 	 my $id = $model->objects($test_uri, iri($ns->dc->identifier->as_string))->next;
-	 my $expects_iter = $model->objects($test_uri, iri($ns->test->expects->as_string));
+	 my $expects_iter = $model->objects($test_uri, iri($ns->test->params->as_string));
 	 while (my $expect_sub = $expects_iter->next) {
 		my $expectations_iter = $model->get_quads($expect_sub);
 		my $params;

@@ -11,5 +11,5 @@
     test:handler "Internal::Fixture::Array"^^deps:CpanId ;
     test:param_base <http://example.org/my-parameters#> ;
     dc:identifier "string_found" ;
-    test:expects [ my:all "counter-clockwise dahut" ] .
+    test:params [ my:all "counter-clockwise dahut" ] .
         

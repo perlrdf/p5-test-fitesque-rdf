@@ -36,7 +36,9 @@ my $t = Test::FITesque::Test::RDF->new(source => $file,
 													param_ns => 'http://example.org/my-parameters#');
 
 use Data::Dumper;
-cmp_deeply($t->transform_rdf,
+
+my $data = $t->transform_rdf;
+cmp_deeply($data,
 			  [ [ 'Internal::Fixture::Array' ],
 				 [ 'string_found',
 					{
