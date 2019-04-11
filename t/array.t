@@ -37,10 +37,10 @@ my $t = Test::FITesque::Test::RDF->new(source => $file,
 
 use Data::Dumper;
 cmp_deeply($t->transform_rdf,
-			  [ [ 'Internal::Fixture' ],
-				 [ 'test_http_get',
+			  [ [ 'Internal::Fixture::Array' ],
+				 [ 'string_found',
 					{
-					 'uri' => 'https://inrupt.com/'
+					 'all' => 'counter-clockwise dahut'
 					}
 				 ]
 			  ]);
