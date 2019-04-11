@@ -40,10 +40,11 @@ sub transform_rdf {
   my @data;
   
   while (my $test_uri = $tests_uri_iter->next) {
+	 my @instance;
 	 my $params_base = URI::Namespace->new($model->objects($test_uri, iri($ns->test->param_base->as_string))->next);
 	 $ns->guess_and_add($params_base);
 	 my $handler = $model->objects($test_uri, iri($ns->test->handler->as_string))->next;
-	 push(@data, [$handler->value]);
+	 push(@instance, [$handler->value]);
 	 my $id = $model->objects($test_uri, iri($ns->dc->identifier->as_string))->next;
 	 my $expects_iter = $model->objects($test_uri, iri($ns->test->params->as_string));
 	 while (my $expect_sub = $expects_iter->next) {
@@ -54,8 +55,9 @@ sub transform_rdf {
 		  my $value = $expect->object->value;
 		  $params->{$param} = $value;
 		}
-		push(@data, [$id->value, $params])
+		push(@instance, [$id->value, $params])
 	 }
+	 push(@data, \@instance);
   }
   return \@data;
 }

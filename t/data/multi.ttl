@@ -13,13 +13,13 @@
     dc:identifier "string_found" ;
     test:params [ my:all "counter-clockwise dahut" ] .
         
-<#test1> a test:Test ;
+<#test2> a test:Test ;
     test:handler "Internal::Fixture::Multi"^^deps:CpanId ;
     test:param_base <http://example.org/my-parameters#> ;
     dc:identifier "multiplication" ;
     test:params [
         my:factor1 6 ;
         my:factor2 7 ;
-        my:product 42 .
+        my:product 42 
     ] .
         
