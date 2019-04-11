@@ -11,12 +11,11 @@ use Moo;
 use Attean::RDF;
 use Path::Tiny;
 use URI::NamespaceMap;
-#use Test::FITesque::Test;
+use Test::FITesque::Test;
 use Types::Namespace qw(Namespace);
 use Types::Path::Tiny qw(Path);
 use Data::Dumper;
 
-use parent 'Test::FITesque::Test';
 #extends 'Test::FITesque::Test';
 
 has source => (
