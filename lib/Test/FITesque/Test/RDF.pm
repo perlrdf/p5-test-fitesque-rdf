@@ -35,12 +35,8 @@ has param_ns => (
 					 );
 
 
-
-sub BUILD {}
-before 'BUILD' => sub {
-  warn Dumper(\@_);
+sub transform_rdf {
   my $self = shift;
-  warn "FOOO";
   my $ns = URI::NamespaceMap->new(['deps', 'dc']);
   $ns->add_mapping(test => 'http://example.org/test-fixtures#'); # TODO: Get a proper URI
   $ns->add_mapping(param => $self->param_ns);
@@ -59,20 +55,17 @@ before 'BUILD' => sub {
 	 my $expects_iter = $model->objects($test_uri, iri($ns->test->expects->as_string));
 	 while (my $expect_sub = $expects_iter->next) {
 		my $expectations_iter = $model->get_quads($expect_sub);
-		my %params;
+		my $params;
 		while (my $expect = $expectations_iter->next) {
 		  my $param = $self->param_ns->local_part($expect->predicate);
 		  my $value = $expect->object->value;
-		  $params{$param} = $value;
+		  $params->{$param} = $value;
 		}
-		push(@data, [$id->value, %params])
+		push(@data, [$id->value, $params])
 	 }
   }
-  use Data::Dumper;
-  
-  warn Dumper(\@data);
-  $_[0] = ({data => \@data})
-};
+  return \@data;
+}
 
 1;
 

@@ -24,6 +24,7 @@ This is free software, licensed under:
 use strict;
 use warnings;
 use Test::More;
+use Test::Deep;
 use FindBin qw($Bin);
 
 
@@ -34,11 +35,15 @@ use_ok('Test::FITesque::Test::RDF');
 my $t = Test::FITesque::Test::RDF->new(source => $file,
 													param_ns => 'http://example.org/my-parameters#');
 
-#warn Dumper $t->_transform;
-
-
-
-
+use Data::Dumper;
+cmp_deeply($t->transform_rdf,
+			  [ [ 'Internal::Fixture' ],
+				 [ 'test_http_get',
+					{
+					 'uri' => 'https://inrupt.com/'
+					}
+				 ]
+			  ]);
 
 
 done_testing;
