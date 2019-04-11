@@ -11,12 +11,13 @@ use Moo;
 use Attean::RDF;
 use Path::Tiny;
 use URI::NamespaceMap;
-use Test::FITesque::Test;
+#use Test::FITesque::Test;
 use Types::Namespace qw(Namespace);
 use Types::Path::Tiny qw(Path);
+use Data::Dumper;
 
-extends 'Test::FITesque::Test';
-
+use parent 'Test::FITesque::Test';
+#extends 'Test::FITesque::Test';
 
 has source => (
 					is      => 'ro',
@@ -34,9 +35,12 @@ has param_ns => (
 					 );
 
 
-around 'new' => sub {
-  my $orig = shift;
+
+sub BUILD {}
+before 'BUILD' => sub {
+  warn Dumper(\@_);
   my $self = shift;
+  warn "FOOO";
   my $ns = URI::NamespaceMap->new(['deps', 'dc']);
   $ns->add_mapping(test => 'http://example.org/test-fixtures#'); # TODO: Get a proper URI
   $ns->add_mapping(param => $self->param_ns);
@@ -64,10 +68,10 @@ around 'new' => sub {
 		push(@data, [$id->value, %params])
 	 }
   }
+  use Data::Dumper;
   
-  
-  print Dumper(\@data);
-  $self->$orig({data => \@data});
+  warn Dumper(\@data);
+  $_[0] = ({data => \@data})
 };
 
 1;

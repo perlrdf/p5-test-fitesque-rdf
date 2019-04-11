@@ -27,15 +27,14 @@ use Test::More;
 use FindBin qw($Bin);
 
 
-my $file = $Bin . '/data/rdf-fixtures.ttl';
+my $file = $Bin . '/data/simple.ttl';
 
 
 use_ok('Test::FITesque::Test::RDF');
-
 my $t = Test::FITesque::Test::RDF->new(source => $file,
 													param_ns => 'http://example.org/my-parameters#');
 
-warn Dumper $t->_transform;
+#warn Dumper $t->_transform;
 
 
 
