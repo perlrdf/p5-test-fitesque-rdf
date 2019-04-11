@@ -4,7 +4,7 @@
 
 =head1 PURPOSE
 
-Unit test that Test::FITesque::Test::RDF transforms data correctly from RDF
+Simple unit test that Test::FITesque::Test::RDF transforms data correctly from RDF
 
 =head1 AUTHOR
 
@@ -32,14 +32,13 @@ my $file = $Bin . '/data/simple.ttl';
 
 
 use_ok('Test::FITesque::Test::RDF');
-my $t = Test::FITesque::Test::RDF->new(source => $file,
-													param_ns => 'http://example.org/my-parameters#');
+my $t = Test::FITesque::Test::RDF->new(source => $file);
 
 use Data::Dumper;
 
 my $data = $t->transform_rdf;
 cmp_deeply($data,
-			  [ [ 'Internal::Fixture::Array' ],
+			  [ [ 'Internal::Fixture::Simple' ],
 				 [ 'string_found',
 					{
 					 'all' => 'counter-clockwise dahut'
