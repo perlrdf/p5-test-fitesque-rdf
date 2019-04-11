@@ -36,7 +36,7 @@ sub transform_rdf {
   $model->add_iter($parser->parse_iter_from_io( $self->source->openr_utf8 )->as_quads(iri('http://example.org/graph'))); # TODO: Use a proper URI for graph
 
   my $tests_uri_iter = $model->objects(undef, iri($ns->test->fixtures->as_string)); # TODO: Implement coercions in Attean
-
+  # TODO: Support rdf:List here
   my @data;
   
   while (my $test_uri = $tests_uri_iter->next) {
