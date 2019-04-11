@@ -37,14 +37,14 @@ my $t = Test::FITesque::Test::RDF->new(source => $file);
 use Data::Dumper;
 
 my $data = $t->transform_rdf;
-cmp_deeply($data,
+cmp_deeply($data, [
 			  [ [ 'Internal::Fixture::Simple' ],
 				 [ 'string_found',
 					{
 					 'all' => 'counter-clockwise dahut'
 					}
 				 ]
-			  ]);
+			  ] ]);
 
 
 done_testing;
