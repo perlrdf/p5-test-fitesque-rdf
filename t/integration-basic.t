@@ -70,10 +70,7 @@ use_ok('Test::FITesque::Test::RDF');
 my $rdft = Test::FITesque::Test::RDF->new(source => $file);
 isa_ok($rdft, 'Test::FITesque::Test::RDF');
 
-my @tests;
-foreach my $data (@{$rdft->transform_rdf}) {
-  push(@tests, Test::FITesque::Test->new({ data => $data }));
-}
+my @tests = map { Test::FITesque::Test->new({ data => $_ }) } @{$rdft->transform_rdf};
  
 run_tests {
   @tests;
