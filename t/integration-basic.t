@@ -35,7 +35,7 @@ use Test::FITesque::Test;
 
 
 package Internal::Fixture::Simple {
-  use base qw(Test::FITesque::Fixture);
+  use parent 'Test::FITesque::Fixture';
   use Test::More ;
   
   sub string_found : Test : Plan(2) {
@@ -48,7 +48,7 @@ package Internal::Fixture::Simple {
 };
 
 package Internal::Fixture::Multi {
-  use base qw(Test::FITesque::Fixture);
+  use parent 'Test::FITesque::Fixture';
   use Test::More ;
   
   sub multiplication : Test : Plan(4) {
