@@ -3,7 +3,14 @@
 @prefix : <http://ontologi.es/doap-deps#>.
 
 `Test-FITesque-RDF`
-	:test-requirement       [ :on "Test::More 0.96"^^:CpanId ];
-	:develop-recommendation [ :on "Dist::Inkt 0.001"^^:CpanId ];
-	.
+    :test-requirement       [ :on "Test::More 0.96"^^:CpanId ];
+    :runtime-requirement    [ :on "Moo 1.006000"^^:CpanId ];
+    :runtime-requirement    [ :on "Attean 0.010"^^:CpanId ];
+    :runtime-requirement    [ :on "Types::Standard"^^:CpanId ];
+    :runtime-requirement    [ :on "Types::URI"^^:CpanId ];
+    :runtime-requirement    [ :on "Test::FITesque"^^:CpanId ];
+    :runtime-requirement    [ :on "URI::NamespaceMap"^^:CpanId ];
+    :runtime-requirement    [ :on "Path::Tiny"^^:CpanId ];
+    :develop-recommendation [ :on "Dist::Inkt 0.001"^^:CpanId ];
+    .
 
