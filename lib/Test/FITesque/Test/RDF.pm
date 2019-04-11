@@ -27,19 +27,10 @@ has source => (
 				  );
 
 
-has param_ns => (
-					  is => "ro",
-					  isa => Namespace,
-					  required => 1,
-					  coerce => 1,
-					 );
-
-
 sub transform_rdf {
   my $self = shift;
   my $ns = URI::NamespaceMap->new(['deps', 'dc']);
   $ns->add_mapping(test => 'http://example.org/test-fixtures#'); # TODO: Get a proper URI
-  $ns->add_mapping(param => $self->param_ns);
   my $parser = Attean->get_parser(filename => $self->source)->new();
   my $model = Attean->temporary_model;
   $model->add_iter($parser->parse_iter_from_io( $self->source->openr_utf8 )->as_quads(iri('http://example.org/graph'))); # TODO: Use a proper URI for graph
@@ -49,6 +40,8 @@ sub transform_rdf {
   my @data;
   
   while (my $test_uri = $tests_uri_iter->next) {
+	 my $params_base = URI::Namespace->new($model->objects($test_uri, iri($ns->test->param_base->as_string))->next);
+	 $ns->guess_and_add($params_base);
 	 my $handler = $model->objects($test_uri, iri($ns->test->handler->as_string))->next;
 	 push(@data, [$handler->value]);
 	 my $id = $model->objects($test_uri, iri($ns->dc->identifier->as_string))->next;
@@ -57,7 +50,7 @@ sub transform_rdf {
 		my $expectations_iter = $model->get_quads($expect_sub);
 		my $params;
 		while (my $expect = $expectations_iter->next) {
-		  my $param = $self->param_ns->local_part($expect->predicate);
+		  my $param = $params_base->local_part($expect->predicate);
 		  my $value = $expect->object->value;
 		  $params->{$param} = $value;
 		}

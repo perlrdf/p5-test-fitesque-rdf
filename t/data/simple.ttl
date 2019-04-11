@@ -9,7 +9,7 @@
 
 <#test1> a test:Test ;
     test:handler "Internal::Fixture"^^deps:CpanId ;
-    test:param-base <http://example.org/my-parameters#> ;
+    test:param_base <http://example.org/my-parameters#> ;
     dc:identifier "test_http_get" ;
     test:expects [ my:uri "https://inrupt.com/" ] .
         
