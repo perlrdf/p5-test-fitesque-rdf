@@ -32,36 +32,7 @@ use FindBin qw($Bin);
 use Test::FITesque;
 use Test::FITesque::Test;
 
-
-
-package Internal::Fixture::Simple {
-  use parent 'Test::FITesque::Fixture';
-  use Test::More ;
-  
-  sub string_found : Test : Plan(2) {
-	 my ($self, %args) = @_;
-	 ok(defined($args{all}), 'String exists');
-	 like($args{all}, qr/dahut/, 'Has a certain keyword');
-  }
-
-  1;
-};
-
-package Internal::Fixture::Multi {
-  use parent 'Test::FITesque::Fixture';
-  use Test::More ;
-  
-  sub multiplication : Test : Plan(4) {
-	 my ($self, %args) = @_;
-	 ok(defined($args{factor1}), 'Factor 1 exists');
-	 ok(defined($args{factor2}), 'Factor 2 exists');
-	 ok(defined($args{product}), 'Product parameter exists');
-	 is($args{factor1} * $args{factor2}, $args{product}, 'Product is correct');
-  }
-
-  1;
-};
-
+use lib 't/lib';
 
 my $file = $Bin . '/data/multi.ttl';
 
