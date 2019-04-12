@@ -36,10 +36,10 @@ use lib 't/lib';
 
 my $file = $Bin . '/data/multi.ttl';
 
+use Test::FITesque::Test::RDF;
 
-use_ok('Test::FITesque::Test::RDF');
 my $rdft = Test::FITesque::Test::RDF->new(source => $file);
-isa_ok($rdft, 'Test::FITesque::Test::RDF');
+
 
 my @tests = map { Test::FITesque::Test->new({ data => $_ }) } @{$rdft->transform_rdf};
  
