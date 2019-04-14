@@ -34,8 +34,6 @@ my $file = $Bin . '/data/multi.ttl';
 use_ok('Test::FITesque::Test::RDF');
 my $t = Test::FITesque::Test::RDF->new(source => $file);
 
-use Data::Dumper;
-
 my $data = $t->transform_rdf;
 
 my $multi = [
