@@ -12,11 +12,10 @@ use Attean::RDF;
 use Path::Tiny;
 use URI::NamespaceMap;
 use Test::FITesque::Test;
+use Types::Standard qw(InstanceOf);
 use Types::Namespace qw(Namespace);
 use Types::Path::Tiny qw(Path);
 use Data::Dumper;
-
-#extends 'Test::FITesque::Test';
 
 has source => (
 					is      => 'ro',
@@ -24,6 +23,21 @@ has source => (
 					required => 1,
 					coerce  => 1,
 				  );
+
+has suite => (
+				  is => 'lazy',
+				  isa => InstanceOf['Test::FITesque::Suite'],
+				 );
+
+sub _build_suite {
+  my $self = shift;
+  my $suite = Test::FITesque::Suite->new();
+  foreach my $test (@{$self->transform_rdf}) {
+	 $suite->add(Test::FITesque::Test->new({ data => $test}));
+  }
+  return $suite;
+}
+
 
 
 sub transform_rdf {

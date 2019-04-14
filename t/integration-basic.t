@@ -38,13 +38,10 @@ my $file = $Bin . '/data/multi.ttl';
 
 use Test::FITesque::Test::RDF;
 
-my $rdft = Test::FITesque::Test::RDF->new(source => $file);
+my $suite = Test::FITesque::Test::RDF->new(source => $file)->suite;
 
+$suite->run_tests;
 
-my @tests = map { Test::FITesque::Test->new({ data => $_ }) } @{$rdft->transform_rdf};
- 
-run_tests {
-  @tests;
-}
+done_testing;
   
 

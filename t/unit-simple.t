@@ -23,18 +23,22 @@ This is free software, licensed under:
 
 use strict;
 use warnings;
-use Test::More;
-use Test::Deep;
+use Test::Modern;
 use FindBin qw($Bin);
 
 
 my $file = $Bin . '/data/simple.ttl';
 
+use Test::FITesque::Test::RDF;
 
-use_ok('Test::FITesque::Test::RDF');
-my $t = Test::FITesque::Test::RDF->new(source => $file);
 
-use Data::Dumper;
+my $t = object_ok(
+						sub { Test::FITesque::Test::RDF->new(source => $file) }, '$t',
+						isa => [qw(Test::FITesque::Test::RDF Moo::Object)],
+						can => [qw(source suite transform_rdf)]);
+
+
+
 
 my $data = $t->transform_rdf;
 cmp_deeply($data, [
