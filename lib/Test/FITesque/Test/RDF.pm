@@ -28,7 +28,7 @@ has source => (
 
 sub transform_rdf {
   my $self = shift;
-  my $ns = URI::NamespaceMap->new(['deps', 'dc']);
+  my $ns = URI::NamespaceMap->new(['deps', 'dc', 'rdf']);
   $ns->add_mapping(test => 'http://example.org/test-fixtures#'); # TODO: Get a proper URI
   my $parser = Attean->get_parser(filename => $self->source)->new();
   my $model = Attean->temporary_model;
@@ -36,11 +36,16 @@ sub transform_rdf {
   my $graph_id = iri('http://example.org/graph'); # TODO: Use a proper URI for graph
   $model->add_iter($parser->parse_iter_from_io( $self->source->openr_utf8 )->as_quads($graph_id));
 
-  my $tests_uri_iter = $model->objects(undef, iri($ns->test->fixtures->as_string)); # TODO: Implement coercions in Attean
-  # TODO: Support rdf:List here
+  my $tests_uri_iter = $model->objects(undef, iri($ns->test->fixtures->as_string))->materialize; # TODO: Implement coercions in Attean
+  my $first = $tests_uri_iter->peek;
+  warn Dumper($tests_uri_iter);
+  if ($first->equals($ns->rdf->first)) {
+	 $tests_uri_iter = $model->get_list($graph_id, $first)->materialize;
+  }
   my @data;
 
   while (my $test_uri = $tests_uri_iter->next) {
+	 warn Dumper($test_uri);
 	 my @instance;
 	 my $params_base = URI::Namespace->new($model->objects($test_uri, iri($ns->test->param_base->as_string))->next);
 	 $ns->guess_and_add($params_base);
