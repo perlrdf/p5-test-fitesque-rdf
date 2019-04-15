@@ -101,7 +101,7 @@ Test::FITesque::Test::RDF - Formulate Test::FITesque fixture tables in RDF
   my $suite = Test::FITesque::Test::RDF->new(source => $file)->suite;
   $suite->run_tests;
 
-See C<t/integration-basic.t> for a full example.
+See C<t/integration-basic.t> for a full test script example.
 
 
 =head1 DESCRIPTION
