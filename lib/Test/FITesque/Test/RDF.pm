@@ -98,7 +98,96 @@ Test::FITesque::Test::RDF - Formulate Test::FITesque fixture tables in RDF
 
 =head1 SYNOPSIS
 
+  my $suite = Test::FITesque::Test::RDF->new(source => $file)->suite;
+  $suite->run_tests;
+
+See C<t/integration-basic.t> for a full example.
+
+
 =head1 DESCRIPTION
+
+This module enables the use of Resource Description Framework to
+describe fixture tables. It will take the filename of an RDF file and
+return a L<Test::FITesque::Suite> object that can be used to run
+tests.
+
+The RDF serves to identify the implementation of certain fixtures, and
+can also supply parameters that can be used by the tests, e.g. input
+parameters or expectations. See L<Test::FITesque> for more on how the
+fixtures are implemented.
+
+=head2 ATTRIBUTES AND METHODS
+
+This module implements the following attributes and methods:
+
+=over
+
+=item C<< source >>
+
+Required attribute to the constructor. Takes a L<Path::Tiny> object
+pointing to the RDF file containing the fixture tables. The value will
+be converted into an appropriate object, so a string can also be
+supplied.
+
+=item C<< suite >>
+
+Will return a L<Test::FITesque::Suite> object, based on the RDF data supplied to the constructor.
+
+=item C<< transform_rdf >>
+
+Will return an arrayref containing tests in the structure used by
+L<Test::FITesque::Test>. Most users will rather call the C<suite>
+method than to call this method directly.
+
+=back
+
+=head2 RDF EXAMPLE
+
+The below example starts with prefix declarations. Since this is a
+pre-release, some of the prefixes are preliminary examples. Then, the
+tests in the fixture table are listed explicitly. Only tests mentioned
+using the C<test:fixtures> predicate will be used.
+
+Then, two test fixtures are declared. The C<test:handler> predicate is
+used to identify the class containing implementations, while
+C<dc:identifier> is used to name the function within that class.
+
+The C<test:params> predicate is used to link the parameters that will
+be sent as a hashref into the function. The key of the hashref will be
+the local part of the predicate used in the description (i.e. the part
+after the colon in e.g. C<my:all>). It is up to the test writer to
+mint the URIs of the parameters, and the C<param_base> is used to set
+indicate the namespace, so that the local part can be resolved. The
+resolution itself happens in L<URI::NamespaceMap>.
+
+
+  @prefix test: <http://example.org/test-fixtures#> .
+  @prefix deps: <http://ontologi.es/doap-deps#>.
+  @prefix dc:   <http://purl.org/dc/terms/> .
+  @prefix my:   <http://example.org/my-parameters#> .
+
+
+  <#test-list> a test:FixtureTable ;
+    test:fixtures <#test1>, <#test2> .
+
+  <#test1> a test:Test ;
+    test:handler "Internal::Fixture::Simple"^^deps:CpanId ;
+    dc:identifier "string_found" ;
+    test:param_base <http://example.org/my-parameters#> ;
+    test:params [ my:all "counter-clockwise dahut" ] .
+
+  <#test2> a test:Test ;
+    test:handler "Internal::Fixture::Multi"^^deps:CpanId ;
+    dc:identifier "multiplication" ;
+    test:param_base <http://example.org/my-parameters#> ;
+    test:params [
+        my:factor1 6 ;
+        my:factor2 7 ;
+        my:product 42
+    ] .
+
+
+
 
 =head1 BUGS
 
