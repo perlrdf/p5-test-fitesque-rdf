@@ -11,5 +11,11 @@ sub string_found : Test : Plan(2) {
   like($args->{all}, qr/dahut/, 'Has a certain keyword');
 }
 
+sub relative_uri : Test : Plan(2) {
+  my ($self, $args) = @_;
+  ok(defined($args->{url}), 'Url comes through');
+  is($args->{url}, 'http://example.org/foo/', 'Url is resolved');
+}
+
 1;
 

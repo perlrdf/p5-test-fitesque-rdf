@@ -13,7 +13,7 @@ use Path::Tiny;
 use URI::NamespaceMap;
 use Test::FITesque::Test;
 use Types::Standard qw(InstanceOf);
-use Types::Namespace qw(Namespace);
+use Types::Namespace qw(Iri Namespace);
 use Types::Path::Tiny qw(Path);
 use Data::Dumper;
 
@@ -23,6 +23,14 @@ has source => (
 					required => 1,
 					coerce  => 1,
 				  );
+
+
+has base_uri => (
+					  is => 'ro',
+					  isa => Iri,
+					  coerce => 1,
+					  default => sub { 'http://localhost/' }
+					  );
 
 has suite => (
 				  is => 'lazy',
@@ -44,7 +52,7 @@ sub transform_rdf {
   my $self = shift;
   my $ns = URI::NamespaceMap->new(['deps', 'dc']);
   $ns->add_mapping(test => 'http://example.org/test-fixtures#'); # TODO: Get a proper URI
-  my $parser = Attean->get_parser(filename => $self->source)->new();
+  my $parser = Attean->get_parser(filename => $self->source)->new( base => $self->base_uri );
   my $model = Attean->temporary_model;
 
   my $graph_id = iri('http://example.org/graph'); # TODO: Use a proper URI for graph
@@ -138,6 +146,10 @@ Will return a L<Test::FITesque::Suite> object, based on the RDF data supplied to
 Will return an arrayref containing tests in the structure used by
 L<Test::FITesque::Test>. Most users will rather call the C<suite>
 method than to call this method directly.
+
+=item C<< base_uri >>
+
+A L<IRI> to use in parsing the RDF fixture tables to resolve any relative URIs.
 
 =back
 
