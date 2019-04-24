@@ -36,9 +36,9 @@ use lib 't/lib';
 
 my $file = $Bin . '/data/multi.ttl';
 
-use Test::FITesque::Test::RDF;
+use Test::FITesque::RDF;
 
-my $suite = Test::FITesque::Test::RDF->new(source => $file)->suite;
+my $suite = Test::FITesque::RDF->new(source => $file)->suite;
 
 $suite->run_tests;
 

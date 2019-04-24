@@ -4,7 +4,7 @@
 
 =head1 PURPOSE
 
-Test that Test::FITesque::Test::RDF compiles.
+Test that Test::FITesque::RDF compiles.
 
 =head1 AUTHOR
 
@@ -25,9 +25,9 @@ use strict;
 use warnings;
 use Test::More;
 
-use_ok('Test::FITesque::Test::RDF');
+use_ok('Test::FITesque::RDF');
 
-diag( "Testing Test::FITesque::Test::RDF $Test::FITesque::Test::RDF::VERSION, Perl $], $^X" );
+diag( "Testing Test::FITesque::RDF $Test::FITesque::RDF::VERSION, Perl $], $^X" );
 
 done_testing;
 

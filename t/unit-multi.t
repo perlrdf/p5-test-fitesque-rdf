@@ -4,7 +4,7 @@
 
 =head1 PURPOSE
 
-Unit test that Test::FITesque::Test::RDF transforms data correctly from RDF with multiple tests and multiple parameters
+Unit test that Test::FITesque::RDF transforms data correctly from RDF with multiple tests and multiple parameters
 
 =head1 AUTHOR
 
@@ -31,8 +31,8 @@ use FindBin qw($Bin);
 my $file = $Bin . '/data/multi.ttl';
 
 
-use_ok('Test::FITesque::Test::RDF');
-my $t = Test::FITesque::Test::RDF->new(source => $file);
+use_ok('Test::FITesque::RDF');
+my $t = Test::FITesque::RDF->new(source => $file);
 
 my $data = $t->transform_rdf;
 

@@ -4,7 +4,7 @@
 
 =head1 PURPOSE
 
-Simple unit test that Test::FITesque::Test::RDF transforms data correctly from RDF
+Simple unit test that Test::FITesque::RDF transforms data correctly from RDF
 
 =head1 AUTHOR
 
@@ -29,12 +29,12 @@ use FindBin qw($Bin);
 
 my $file = $Bin . '/data/simple.ttl';
 
-use Test::FITesque::Test::RDF;
+use Test::FITesque::RDF;
 
 
 my $t = object_ok(
-						sub { Test::FITesque::Test::RDF->new(source => $file) }, '$t',
-						isa => [qw(Test::FITesque::Test::RDF Moo::Object)],
+						sub { Test::FITesque::RDF->new(source => $file) }, '$t',
+						isa => [qw(Test::FITesque::RDF Moo::Object)],
 						can => [qw(source suite transform_rdf)]);
 
 
