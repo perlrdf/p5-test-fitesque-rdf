@@ -26,8 +26,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Path::Tiny;
-use Data::Dumper;
 use FindBin qw($Bin);
 use Test::FITesque;
 use Test::FITesque::Test;
