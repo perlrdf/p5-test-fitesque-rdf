@@ -6,7 +6,7 @@
 
 cpan:KJETILK
   :name  "Kjetil Kjernsmo";
-  owl:sameAs result:user-Kjetil Kjernsmo.
+  owl:sameAs result:user-Kjetil-Kjernsmo.
 
 cpan:KONOBI
     :name  "Scott McWirther" .
