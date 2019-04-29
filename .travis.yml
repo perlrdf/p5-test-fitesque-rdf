@@ -6,7 +6,6 @@ perl:
   - "dev"
 sudo: false             # faster builds as long as you don't need sudo access
 before_install:
-  - "cpanm --quiet --installdeps --notest GWILLIAMS/Attean-0.022_01.tar.gz"
   - export DIST_INKT_PROFILE="Dist::Inkt::Profile::KJETILK"
   - eval $(curl https://travis-perl.github.io/init) --auto
 notifications:
