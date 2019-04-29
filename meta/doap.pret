@@ -19,6 +19,8 @@
    :license              <http://www.opensource.org/licenses/mit-license.php>;
    :maintainer           cpan:KJETILK;
    :security-contact     cpan:KJETILK;
-   :developer            cpan:KJETILK.
+   :developer            cpan:KJETILK ;
+   :helper               cpan:KONOBI .
+    
 
 
