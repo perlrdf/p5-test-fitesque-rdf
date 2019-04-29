@@ -14,7 +14,7 @@
                            :browse <https://github.com/kjetilk/p5-test-fitesque-rdf>;
                            prov:has_provenance <http://git2prov.org/git2prov?giturl=https%3A%2F%2Fgithub.com%2Fkjetilk%2Fp5-test-fitesque-rdf&serialization=PROV-O#>
                          ];
-#   :support-forum        <irc://irc.perl.org/#perlrdf> ;
+   :support-forum        <irc://irc.perl.org/#perlrdf> ;
    :created              2019-04-09;
    :license              <http://www.opensource.org/licenses/mit-license.php>;
    :maintainer           cpan:KJETILK;
