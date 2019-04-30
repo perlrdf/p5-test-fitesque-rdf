@@ -13,6 +13,7 @@
     :runtime-requirement    [ :on "Types::URI"^^:CpanId ];
     :runtime-requirement    [ :on "Test::FITesque"^^:CpanId ];
     :runtime-requirement    [ :on "URI::NamespaceMap 1.08"^^:CpanId ];
+    :runtime-requirement    [ :on "RDF::NS::Curated"^^:CpanId ];
     :runtime-requirement    [ :on "Path::Tiny"^^:CpanId ];
     :develop-recommendation [ :on "Dist::Inkt 0.001"^^:CpanId ];
     .
