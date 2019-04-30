@@ -1,5 +1,9 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.002 cpan:KJETILK`
+	issued  2019-04-30;
+	label   "Minor tweaks".
+
 `Test-FITesque-RDF 0.001 cpan:KJETILK`
 	issued  2019-04-29;
 	label   "Initial release".
