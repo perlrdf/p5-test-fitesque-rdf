@@ -8,7 +8,7 @@
     :test-requirement       [ :on "Test::Deep"^^:CpanId ];
     :test-requirement       [ :on "FindBin"^^:CpanId ];
     :runtime-requirement    [ :on "Moo 1.006000"^^:CpanId ];
-    :runtime-requirement    [ :on "Attean 0.022_01"^^:CpanId ];
+    :runtime-requirement    [ :on "Attean 0.023"^^:CpanId ];
     :runtime-requirement    [ :on "Types::Standard"^^:CpanId ];
     :runtime-requirement    [ :on "Types::URI"^^:CpanId ];
     :runtime-requirement    [ :on "Test::FITesque"^^:CpanId ];
