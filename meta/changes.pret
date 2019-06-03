@@ -1,5 +1,9 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.004 cpan:KJETILK`
+	issued  2019-06-03;
+        label   "Support RDF lists".
+
 `Test-FITesque-RDF 0.003 cpan:KJETILK`
 	issued  2019-04-30;
 	label   "Add more dependencies".
