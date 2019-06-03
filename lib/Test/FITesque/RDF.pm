@@ -50,7 +50,7 @@ sub _build_suite {
 
 sub transform_rdf {
   my $self = shift;
-  my $ns = URI::NamespaceMap->new(['deps', 'dc']);
+  my $ns = URI::NamespaceMap->new(['deps', 'dc', 'rdf']);
   $ns->add_mapping(test => 'http://example.org/test-fixtures#'); # TODO: Get a proper URI
   my $parser = Attean->get_parser(filename => $self->source)->new( base => $self->base_uri );
   my $model = Attean->temporary_model;
@@ -58,8 +58,14 @@ sub transform_rdf {
   my $graph_id = iri('http://example.org/graph'); # TODO: Use a proper URI for graph
   $model->add_iter($parser->parse_iter_from_io( $self->source->openr_utf8 )->as_quads($graph_id));
 
-  my $tests_uri_iter = $model->objects(undef, iri($ns->test->fixtures->as_string)); # TODO: Implement coercions in Attean
-  # TODO: Support rdf:List here
+  my $tests_uri_iter = $model->objects(undef, iri($ns->test->fixtures->as_string))->materialize; # TODO: Implement coercions in Attean
+
+  if ($model->holds($tests_uri_iter->peek, iri($ns->rdf->first->as_string), undef, $graph_id)) {
+	 # Then, the object is a list. This supports either unordered
+	 # objects or lists, not both. This could be changed by iterating
+	 # in the below loop, but I don't see much point to it.
+	 $tests_uri_iter = $model->get_list( $graph_id, $tests_uri_iter->peek);
+  }
   my @data;
 
   while (my $test_uri = $tests_uri_iter->next) {
@@ -158,7 +164,9 @@ A L<IRI> to use in parsing the RDF fixture tables to resolve any relative URIs.
 The below example starts with prefix declarations. Since this is a
 pre-release, some of the prefixes are preliminary examples. Then, the
 tests in the fixture table are listed explicitly. Only tests mentioned
-using the C<test:fixtures> predicate will be used.
+using the C<test:fixtures> predicate will be used. Tests may be an RDF
+List, in which case, the tests will run in the specified sequence, if
+not, no sequence may be assumed.
 
 Then, two test fixtures are declared. The C<test:handler> predicate is
 used to identify the class containing implementations, while
