@@ -87,7 +87,7 @@ sub transform_rdf {
 		my $params_iter = $model->get_quads($test->value('paramid')); # Get the parameters for each test
 		my $params;
 		while (my $param = $params_iter->next) {
-		  my $key = $params_base->local_part($param->predicate);
+		  my $key = $params_base->local_part($param->predicate) || $param->predicate->as_string;
 		  my $value = $param->object->value;
 		  $params->{$key} = $value;
 		}
@@ -177,8 +177,8 @@ be sent as a hashref into the function. The key of the hashref will be
 the local part of the predicate used in the description (i.e. the part
 after the colon in e.g. C<my:all>). It is up to the test writer to
 mint the URIs of the parameters, and the C<param_base> is used to set
-indicate the namespace, so that the local part can be resolved. The
-resolution itself happens in L<URI::NamespaceMap>.
+indicate the namespace, so that the local part can be resolved, if
+wanted. The resolution itself happens in L<URI::NamespaceMap>.
 
 
   @prefix test: <http://example.org/test-fixtures#> .

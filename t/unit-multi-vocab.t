@@ -50,9 +50,6 @@ my $simple = [[
 				  ]];
 
 
-
-use Data::Dumper;
-warn Dumper($data);
 cmp_deeply($data, $simple);
 
 
