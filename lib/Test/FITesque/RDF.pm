@@ -60,7 +60,7 @@ sub transform_rdf {
   $model->add_iter($parser->parse_iter_from_io( $self->source->openr_utf8 )->as_quads($graph_id));
 
   my $tests_uri_iter = $model->objects(undef, iri($ns->test->fixtures->as_string))->materialize; # TODO: Implement coercions in Attean
-  if (scalar $tests_uri_iter->elements == 0) {
+  if (scalar $tests_uri_iter->elements == 0) { # TODO: Better to check if there are fixture table entries that has no test
 	 croak "No tests found in " . $self->source;
   }
 
