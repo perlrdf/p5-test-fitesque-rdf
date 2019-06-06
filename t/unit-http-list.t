@@ -44,7 +44,7 @@ my $t = object_ok(
 
 my $data = $t->transform_rdf;
 
-#warn Dumper($data);
+#warn Dumper($data->[0]->[1]->[1]);
 cmp_deeply($data,
 [
           [
@@ -59,7 +59,22 @@ cmp_deeply($data,
               }
             ]
           ]
-        ]);
+        ], 'Main structure ok');
+
+my $params = $data->[0]->[1]->[1];
+#warn Dumper($params->{'http-requests'});
+
+is(scalar @{$params->{'http-requests'}}, 2, 'There are two requests');
+
+foreach my $req (@{$params->{'http-requests'}}) {
+  object_ok($req, 'Checking request object',
+				isa => ['HTTP::Request'],
+				can => [qw(method uri headers)]
+			  );
+}
+
+
+
 
 
 done_testing;
