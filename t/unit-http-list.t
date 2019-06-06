@@ -79,8 +79,8 @@ is(${$params->{'http-requests'}}[1]->method, 'GET', 'Second method is GET');
 
 is(scalar @{$params->{'http-responses'}}, 2, 'There are two responses');
 
-foreach my $req (@{$params->{'http-responses'}}) {
-  object_ok($req, 'Checking response object',
+foreach my $res (@{$params->{'http-responses'}}) {
+  object_ok($res, 'Checking response object',
 				isa => ['HTTP::Response'],
 				can => [qw(code headers)]
 			  );
