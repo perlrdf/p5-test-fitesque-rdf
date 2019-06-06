@@ -120,7 +120,23 @@ sub transform_rdf {
 				}
 				push(@requests, $req);
 			 }
-			 $params->{'http'} = \@requests;
+			 $params->{'http-requests'} = \@requests;
+
+			 my $res_iter = $model->get_list($graph_id, $res_head);
+			 while (my $res_subject = $res_iter->next) {
+				my $res = HTTP::Response->new;
+				my $res_entry_iter = $model->get_quads($res_subject);
+				while (my $res_data = $res_entry_iter->next) {
+				  my $local_header = $ns->httph->local_part($res_data->predicate);
+				  if ($res_data->predicate->equals($ns->http->status)) {
+					 $res->code($res_data->object->value);
+				  } elsif (defined($local_header)) {
+					 $res->push_header(_find_header($local_header, $res_data));
+				  }
+				}
+				push(@responses, $res);
+			 }
+			 $params->{'http-responses'} = \@responses;
 		  } else {
 			 my $key = $params_base->local_part($param->predicate) || $param->predicate->as_string;
 			 my $value = $param->object->value;
