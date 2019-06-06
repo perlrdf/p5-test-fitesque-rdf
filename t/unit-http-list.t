@@ -26,7 +26,6 @@ use warnings;
 use Test::Modern;
 use Test::Deep;
 use FindBin qw($Bin);
-#use Carp::Always;
 use Data::Dumper;
 
 my $file = $Bin . '/data/http-list.ttl';
@@ -44,7 +43,6 @@ my $t = object_ok(
 
 my $data = $t->transform_rdf;
 
-#warn Dumper($data->[0]->[1]->[1]);
 cmp_deeply($data,
 [
           [
@@ -62,7 +60,6 @@ cmp_deeply($data,
         ], 'Main structure ok');
 
 my $params = $data->[0]->[1]->[1];
-#warn Dumper($params->{'http-requests'});
 
 is(scalar @{$params->{'http-requests'}}, 2, 'There are two requests');
 
