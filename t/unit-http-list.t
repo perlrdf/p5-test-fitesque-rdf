@@ -24,6 +24,7 @@ This is free software, licensed under:
 use strict;
 use warnings;
 use Test::Modern;
+use Test::Deep;
 use FindBin qw($Bin);
 #use Carp::Always;
 use Data::Dumper;
@@ -43,10 +44,22 @@ my $t = object_ok(
 
 my $data = $t->transform_rdf;
 
-warn Dumper($data);
-cmp_deeply($data, [
-			  [ [ 'Internal::Fixture::HTTPList' ],
-			  ] ]);
+#warn Dumper($data);
+cmp_deeply($data,
+[
+          [
+            [
+              'Internal::Fixture::HTTPList'
+            ],
+            [
+              'http_req_res_list_unauthenticated',
+              {
+                'http-requests' => ignore(),
+                'http-responses' => ignore()
+              }
+            ]
+          ]
+        ]);
 
 
 done_testing;
