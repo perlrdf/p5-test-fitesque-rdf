@@ -76,5 +76,18 @@ foreach my $req (@{$params->{'http-requests'}}) {
 is(${$params->{'http-requests'}}[0]->method, 'PUT', 'First method is PUT');
 is(${$params->{'http-requests'}}[1]->method, 'GET', 'Second method is GET');
 
+
+is(scalar @{$params->{'http-responses'}}, 2, 'There are two responses');
+
+foreach my $req (@{$params->{'http-responses'}}) {
+  object_ok($req, 'Checking response object',
+				isa => ['HTTP::Response'],
+				can => [qw(code headers)]
+			  );
+}
+
+is(${$params->{'http-responses'}}[0]->code, '201', 'First code is 201');
+is(${$params->{'http-responses'}}[1]->content_type, 'text/turtle', 'Second ctype is turtle');
+
 done_testing;
 
