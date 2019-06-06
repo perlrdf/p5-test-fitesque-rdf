@@ -74,8 +74,7 @@ foreach my $req (@{$params->{'http-requests'}}) {
 }
 
 is(${$params->{'http-requests'}}[0]->method, 'PUT', 'First method is PUT');
-
-
+is(${$params->{'http-requests'}}[1]->method, 'GET', 'Second method is GET');
 
 done_testing;
 
