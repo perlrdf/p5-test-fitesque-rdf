@@ -35,7 +35,7 @@ use Test::FITesque::RDF;
 
 
 my $t = object_ok(
-						sub { Test::FITesque::RDF->new(source => $file) }, '$t',
+						sub { Test::FITesque::RDF->new(source => $file) }, 'RDF Fixture object',
 						isa => [qw(Test::FITesque::RDF Moo::Object)],
 						can => [qw(source suite transform_rdf)]);
 
