@@ -17,6 +17,9 @@ use Types::Namespace qw(Iri Namespace);
 use Types::Path::Tiny qw(Path);
 use Carp qw(croak);
 use Data::Dumper;
+use HTTP::Request;
+use HTTP::Response;
+
 
 has source => (
 					is      => 'ro',
@@ -53,6 +56,8 @@ sub transform_rdf {
   my $self = shift;
   my $ns = URI::NamespaceMap->new(['deps', 'dc', 'rdf']);
   $ns->add_mapping(test => 'http://example.org/test-fixtures#'); # TODO: Get a proper URI
+  $ns->add_mapping(http => 'http://www.w3.org/2007/ont/http#');
+  $ns->add_mapping(httph => 'http://www.w3.org/2007/ont/httph#');
   my $parser = Attean->get_parser(filename => $self->source)->new( base => $self->base_uri );
   my $model = Attean->temporary_model;
 
@@ -91,9 +96,38 @@ sub transform_rdf {
 		my $params_iter = $model->get_quads($test->value('paramid')); # Get the parameters for each test
 		my $params;
 		while (my $param = $params_iter->next) {
-		  my $key = $params_base->local_part($param->predicate) || $param->predicate->as_string;
-		  my $value = $param->object->value;
-		  $params->{$key} = $value;
+		  # First, see if there is are HTTP request-responses that can be constructed
+		  my $req_head = $model->objects(undef, iri($ns->test->requests->as_string))->next;
+		  my $res_head = $model->objects(undef, iri($ns->test->responses->as_string))->next;
+		  my @requests;
+		  my @responses;
+
+		  if ($req_head && $res_head) { # TODO: Test role?
+			 # There is a list of HTTP requests and responses
+			 my $req_iter = $model->get_list($graph_id, $req_head);
+			 while (my $req_subject = $req_iter->next) {
+				my $req = HTTP::Request->new;
+				my $req_entry_iter = $model->get_quads($req_subject);
+				while (my $req_data = $req_entry_iter->next) {
+				  my $local_header = $ns->httph->local_part($req_data->predicate);
+				  if ($req_data->predicate->equals($ns->http->method)) {
+					 $req->method($req_data->object->value);
+				  } elsif ($req_data->predicate->equals($ns->http->requestURI)) {
+					 $req->uri($req_data->object->as_string);
+				  } elsif (defined($local_header)) {
+					 $local_header =~ s/_/-/g; # Some heuristics for creating HTTP headers
+					 $local_header =~ s/\b(\w)/\u$1/g;
+					 $req->header($local_header => $req_data->object->value); # TODO: Use HTTP::Header::push_header
+				  }
+				}
+				push(@requests, $req);
+			 }
+			 $params->{'http'} = \@requests;
+		  } else {
+			 my $key = $params_base->local_part($param->predicate) || $param->predicate->as_string;
+			 my $value = $param->object->value;
+			 $params->{$key} = $value;
+		  }
 		}
 		push(@instance, [$method, $params])
 	 }
@@ -101,6 +135,9 @@ sub transform_rdf {
   }
   return \@data;
 }
+
+
+
 
 1;
 
