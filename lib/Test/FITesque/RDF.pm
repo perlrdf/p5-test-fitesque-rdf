@@ -115,9 +115,7 @@ sub transform_rdf {
 				  } elsif ($req_data->predicate->equals($ns->http->requestURI)) {
 					 $req->uri($req_data->object->as_string);
 				  } elsif (defined($local_header)) {
-					 $local_header =~ s/_/-/g; # Some heuristics for creating HTTP headers
-					 $local_header =~ s/\b(\w)/\u$1/g;
-					 $req->header($local_header => $req_data->object->value); # TODO: Use HTTP::Header::push_header
+					 $req->push_header(_find_header($local_header, $req_data));
 				  }
 				}
 				push(@requests, $req);
@@ -136,8 +134,12 @@ sub transform_rdf {
   return \@data;
 }
 
-
-
+sub _find_header {
+  my ($local_header, $data) = @_;
+  $local_header =~ s/_/-/g; # Some heuristics for creating HTTP headers
+  $local_header =~ s/\b(\w)/\u$1/g;
+  return ($local_header => $data->object->value)
+}
 
 1;
 
