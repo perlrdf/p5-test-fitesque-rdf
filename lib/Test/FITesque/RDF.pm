@@ -79,8 +79,12 @@ sub transform_rdf {
 
   while (my $test_uri = $tests_uri_iter->next) {
 	 my @instance;
-	 my $params_base = URI::Namespace->new($model->objects($test_uri, iri($ns->test->param_base->as_string))->next);
-	 $ns->guess_and_add($params_base);
+	 my $params_base_term = $model->objects($test_uri, iri($ns->test->param_base->as_string))->next;
+	 my $params_base;
+	 if ($params_base_term) {
+		$params_base = URI::Namespace->new($params_base_term);
+		$ns->guess_and_add($params_base);
+	 }
 	 my $test_bgp = bgp(triplepattern($test_uri, iri($ns->test->handler->as_string), variable('handler')),
 							  triplepattern($test_uri, iri($ns->dc->identifier->as_string), variable('method')),
 							  triplepattern($test_uri, iri($ns->test->params->as_string), variable('paramid')));
@@ -138,7 +142,10 @@ sub transform_rdf {
 			 }
 			 $params->{'http-responses'} = \@responses;
 		  } else {
-			 my $key = $params_base->local_part($param->predicate) || $param->predicate->as_string;
+			 my $key = $param->predicate->as_string;
+			 if (defined($params_base) && $params_base->local_part($param->predicate)) {
+				$key = $params_base->local_part($param->predicate)
+			 }
 			 my $value = $param->object->value;
 			 $params->{$key} = $value;
 		  }

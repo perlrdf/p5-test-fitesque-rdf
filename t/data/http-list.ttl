@@ -1,7 +1,6 @@
 @prefix test: <http://example.org/test-fixtures#> .
 @prefix deps: <http://ontologi.es/doap-deps#>.
 @prefix dc:   <http://purl.org/dc/terms/> .
-@prefix my:   <http://example.org/my-parameters#> .
 @prefix httph:<http://www.w3.org/2007/ont/httph#> .
 @prefix http: <http://www.w3.org/2007/ont/http#> .
 
@@ -13,7 +12,6 @@
 <#public-writeread-unauthn-alt> a test:Test ;
     dc:description "More elaborate HTTP vocab for PUT then GET test"@en ;
     test:handler "Internal::Fixture::HTTPList"^^deps:CpanId ;
-    test:param_base <http://example.org/my-parameters#> ;
     dc:identifier "http_req_res_list_unauthenticated" ;
     test:params [
         test:requests ( <#public-writeread-unauthn-alt-put-req> <#public-writeread-unauthn-alt-get-req> ) ;
