@@ -295,8 +295,10 @@ the test fixture.
 This gets more complex, please see the test data file
 C<t/data/http-list.ttl> file for example.
 
+=head1 TODO
 
-
+Separate the implementation-specific details (such as C<test:handler>)
+from the actual fixture tables.
 
 =head1 BUGS
 
