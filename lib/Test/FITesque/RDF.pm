@@ -239,12 +239,20 @@ used to identify the class containing implementations, while
 C<dc:identifier> is used to name the function within that class.
 
 The C<test:params> predicate is used to link the parameters that will
-be sent as a hashref into the function. The key of the hashref will be
-the local part of the predicate used in the description (i.e. the part
-after the colon in e.g. C<my:all>). It is up to the test writer to
-mint the URIs of the parameters, and the C<param_base> is used to set
-indicate the namespace, so that the local part can be resolved, if
-wanted. The resolution itself happens in L<URI::NamespaceMap>.
+be sent as a hashref into the function.
+
+There are two different mechanisms for passing parameters to the test
+scripts, one is simply to pass arbitrary key-value pairs, the other is
+to pass lists of HTTP request-response objects.
+
+=head3 Key-value parameters
+
+The key of the hashref passed as arguments will be the local part of
+the predicate used in the description (i.e. the part after the colon
+in e.g. C<my:all>). It is up to the test writer to mint the URIs of
+the parameters, and the C<param_base> is used to set indicate the
+namespace, so that the local part can be resolved, if wanted. The
+resolution itself happens in L<URI::NamespaceMap>.
 
 
   @prefix test: <http://example.org/test-fixtures#> .
@@ -271,6 +279,21 @@ wanted. The resolution itself happens in L<URI::NamespaceMap>.
         my:factor2 7 ;
         my:product 42
     ] .
+
+
+=head3 HTTP request-response lists
+
+To allow testing HTTP-based interfaces, this module also allows the
+construction of two ordered lists, one with HTTP requests, the other
+with HTTP responses. With those, the framework will construct
+L<HTTP::Request> and L<HTTP::Response> objects respectively. In tests
+scripts, the request objects will typically be passed to the
+L<LWP::UserAgent> as input, and then the response from the remote
+server will be compared with the expected L<HTTP::Response>s made by
+the test fixture.
+
+This gets more complex, please see the test data file
+C<t/data/http-list.ttl> file for example.
 
 
 
