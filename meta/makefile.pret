@@ -16,6 +16,7 @@
     :runtime-requirement    [ :on "RDF::NS::Curated 1.002"^^:CpanId ];
     :runtime-requirement    [ :on "RDF::Prefixes"^^:CpanId ];
     :runtime-requirement    [ :on "Path::Tiny"^^:CpanId ];
+    :runtime-requirement    [ :on "HTTP::Message"^^:CpanId ];
     :develop-recommendation [ :on "Dist::Inkt 0.001"^^:CpanId ];
     .
 
