@@ -1,5 +1,9 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.006 cpan:KJETILK`
+    issued  2019-06-07;
+    label   "Create HTTP request-response objects".
+
 `Test-FITesque-RDF 0.005 cpan:KJETILK`
     issued  2019-06-03;
     label   "Support several vocabularies for parameters".
