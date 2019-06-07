@@ -20,3 +20,14 @@ sub http_req_res_list_unauthenticated : Test : Plan(6) {
 
 1;
 
+# # TODO: This should really mock an HTTP server, then it would be something like
+# sub http_req_res_list_unauthenticated : Test : Plan(2) {
+#   my ($self, $args) = @_;
+#   for (my $i=0; $i <= $#{$args->{'http-requests'}}; $i++) {
+# 	 subtest "Request-response #" . $i+1 => sub {
+# 		my $ua = LWP::UserAgent->new;
+# 		my $response = $ua->request( ${$args->{'http-requests'}}[$i] );
+# 		## Here, compare $response and $ua->request( ${$args->{'http-responses'}}[$i] to see that they match
+# 	 };
+#   }
+# };
