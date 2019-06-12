@@ -1,5 +1,9 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.007 cpan:KJETILK`
+    issued  2019-06-13;
+    label   "Support content for HTTP request objects".
+
 `Test-FITesque-RDF 0.006 cpan:KJETILK`
     issued  2019-06-07;
     label   "Create HTTP request-response objects".
