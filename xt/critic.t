@@ -4,6 +4,7 @@ use Test::Perl::Critic(-exclude => [
 											   'RequireExtendedFormatting',
 											   'ProhibitExcessComplexity',
 												'ProhibitDeepNests',
+												'ProhibitCascadingIfElse',
 												'RequireExplicitPackage'
 											  ],
 							  -severity => 3);

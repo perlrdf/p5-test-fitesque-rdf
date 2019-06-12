@@ -127,7 +127,7 @@ sub transform_rdf {
 						if ($content_response->is_success) {
 						  $req->content($content_response->decoded_content); # TODO: might need encoding
 						} else {
-						  die "Could not retrieve content from " . $req_data->object->as_string . " . Got " . $content_response->status_line;
+						  croak "Could not retrieve content from " . $req_data->object->as_string . " . Got " . $content_response->status_line;
 						}
 					 }
 				  } elsif (defined($local_header)) {
