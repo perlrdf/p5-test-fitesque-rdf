@@ -9,8 +9,7 @@ sudo: false             # faster builds as long as you don't need sudo access
 before_install:
   - export DIST_INKT_PROFILE="Dist::Inkt::Profile::KJETILK"
   - eval $(curl https://travis-perl.github.io/init) --auto
-  - build-perl
-  - perl -V
+  - perl -v
 notifications:
   irc: "irc://irc.perl.org/#perlrdf"
 
