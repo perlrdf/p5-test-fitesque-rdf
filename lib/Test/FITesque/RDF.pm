@@ -78,6 +78,7 @@ sub transform_rdf {
   my @data;
 
   while (my $test_uri = $tests_uri_iter->next) {
+	 warn $test_uri->as_string;
 	 my @instance;
 	 my $params_base_term = $model->objects($test_uri, iri($ns->test->param_base->as_string))->next;
 	 my $params_base;
@@ -100,7 +101,7 @@ sub transform_rdf {
 		my $params_iter = $model->get_quads($test->value('paramid')); # Get the parameters for each test
 		my $params;
 		while (my $param = $params_iter->next) {
-		  # First, see if there is are HTTP request-responses that can be constructed
+		  # First, see if there are HTTP request-responses that can be constructed
 		  my $req_head = $model->objects(undef, iri($ns->test->requests->as_string))->next;
 		  my $res_head = $model->objects(undef, iri($ns->test->responses->as_string))->next;
 		  my @requests;
