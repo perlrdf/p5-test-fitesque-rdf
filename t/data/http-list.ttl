@@ -33,6 +33,7 @@
     http:requestURI </public/foobar.ttl> .
             
 <#public-writeread-unauthn-alt-get-res> a http:ResponseMessage ;
-    httph:content_type "text/turtle" .
+            httph:accept_post  "text/turtle", "application/ld+json" ;
+            httph:content_type "text/turtle" .
             
 
