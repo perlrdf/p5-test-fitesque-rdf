@@ -10,13 +10,13 @@
 <#test1> a test:Test ;
     test:handler "Internal::Fixture::Simple"^^deps:CpanId ;
     test:param_base <http://example.org/my-parameters#> ;
-    dc:identifier "string_found" ;
+    test:script "string_found" ;
     test:params [ my:all "counter-clockwise dahut" ] .
         
 <#test2> a test:Test ;
     test:handler "Internal::Fixture::Multi"^^deps:CpanId ;
     test:param_base <http://example.org/my-parameters#> ;
-    dc:identifier "multiplication" ;
+    test:script "multiplication" ;
     test:params [
         my:factor1 6 ;
         my:factor2 7 ;

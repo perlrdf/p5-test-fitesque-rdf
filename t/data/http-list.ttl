@@ -12,7 +12,7 @@
 <#public-writeread-unauthn-alt> a test:Test ;
     dc:description "More elaborate HTTP vocab for PUT then GET test"@en ;
     test:handler "Internal::Fixture::HTTPList"^^deps:CpanId ;
-    dc:identifier "http_req_res_list_unauthenticated" ;
+    test:script "http_req_res_list_unauthenticated" ;
     test:params [
         test:requests ( <#public-writeread-unauthn-alt-put-req> <#public-writeread-unauthn-alt-get-req> ) ;
         test:responses ( <#public-writeread-unauthn-alt-put-res> <#public-writeread-unauthn-alt-get-res> ) 

@@ -10,7 +10,7 @@
 <#test1> a test:Test ;
     test:handler "Internal::Fixture::Simple"^^deps:CpanId ;
     test:param_base <http://example.org/my-parameters#> ;
-    dc:identifier "multi_vocabs" ;
+    test:script "multi_vocabs" ;
     test:params [
         my:all "counter-clockwise dahut" ;
         <http://example.org/other-vocab#foo> 42 

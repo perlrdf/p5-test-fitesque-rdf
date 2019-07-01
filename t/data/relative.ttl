@@ -10,6 +10,6 @@
 <#test1> a test:Test ;
     test:handler "Internal::Fixture::Simple"^^deps:CpanId ;
     test:param_base <http://example.org/my-parameters#> ;
-    dc:identifier "relative_uri" ;
+    test:script "relative_uri" ;
     test:params [ my:url </foo/> ] .
         
