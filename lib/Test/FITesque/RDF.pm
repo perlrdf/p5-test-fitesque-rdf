@@ -85,8 +85,9 @@ sub transform_rdf {
 		$params_base = URI::Namespace->new($params_base_term);
 		$ns->guess_and_add($params_base);
 	 }
-	 my $test_bgp = bgp(triplepattern($test_uri, iri($ns->test->handler->as_string), variable('handler')),
-							  triplepattern($test_uri, iri($ns->dc->identifier->as_string), variable('method')),
+	 my $test_bgp = bgp(triplepattern($test_uri, iri($ns->rdf->type->as_string), variable('handler_class')),
+							  triplepattern(variable('handler_class'), iri($ns->test->handler->as_string), variable('handler')),
+							  triplepattern($test_uri, iri($ns->test->script->as_string), variable('method')),
 							  triplepattern($test_uri, iri($ns->test->params->as_string), variable('paramid')));
 
 	 my $algebra = Attean::Algebra::Query->new(children => [$test_bgp]); # TODO: generalize the next 4 lines in Attean
