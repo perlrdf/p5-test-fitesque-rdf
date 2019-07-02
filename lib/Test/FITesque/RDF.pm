@@ -20,6 +20,7 @@ use Data::Dumper;
 use HTTP::Request;
 use HTTP::Response;
 use LWP::UserAgent;
+use Try::Tiny;
 
 has source => (
 					is      => 'ro',
@@ -62,7 +63,14 @@ sub transform_rdf {
   my $model = Attean->temporary_model;
 
   my $graph_id = iri('http://example.org/graph'); # TODO: Use a proper URI for graph
-  $model->add_iter($parser->parse_iter_from_io( $self->source->openr_utf8 )->as_quads($graph_id));
+
+  my $file_iter;
+  try {
+	 $file_iter = $parser->parse_iter_from_io( $self->source->openr_utf8 );
+  } catch {
+	 croak 'Failed to parse ' . $self->source . " due to $_";
+  };
+  $model->add_iter( $file_iter )->as_quads($graph_id);
 
   my $tests_uri_iter = $model->objects(undef, iri($ns->test->fixtures->as_string))->materialize; # TODO: Implement coercions in Attean
   if (scalar $tests_uri_iter->elements == 0) { # TODO: Better to check if there are fixture table entries that has no test
