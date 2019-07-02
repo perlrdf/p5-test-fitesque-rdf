@@ -8,7 +8,7 @@ use Test::Deep ;
 
 sub http_req_res_list_unauthenticated : Test : Plan(7) {
   my ($self, $args) = @_;
-
+  note($args->{description});
   # TODO: Doesn't seem that hard to use Test::Deep for this after all
   is(scalar @{$args->{'http-requests'}}, 2, 'There are two requests');
   is(${$args->{'http-requests'}}[0]->method, 'PUT', 'First method is PUT');

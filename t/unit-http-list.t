@@ -52,8 +52,9 @@ cmp_deeply($data,
             [
               'http_req_res_list_unauthenticated',
               {
-                'http-requests' => ignore(),
-                'http-responses' => ignore()
+					'http-requests' => ignore(),
+					'http-responses' => ignore(),
+					'description' => 'More elaborate HTTP vocab for PUT then GET test',
               }
             ]
           ]

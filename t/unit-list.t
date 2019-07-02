@@ -42,6 +42,7 @@ my $multi = [
 				 [
 				  'multiplication',
 				  {
+					'description' => 'Multiply two numbers',
 					'factor1' => '6',
 					'product' => '42',
 					'factor2' => '7'
@@ -55,12 +56,13 @@ my $simple = [
 				  [
 					'string_found',
 					{
+					 'description' => 'Echo a string',
 					 'all' => 'counter-clockwise dahut'
 					}
 				  ]
 				 ];
 
-cmp_deeply($data, [$simple, $multi]);
+cmp_deeply($data, [$simple, $multi], 'Compare the data structures');
 
 
 done_testing;
