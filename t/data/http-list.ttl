@@ -3,15 +3,15 @@
 @prefix dc:   <http://purl.org/dc/terms/> .
 @prefix httph:<http://www.w3.org/2007/ont/httph#> .
 @prefix http: <http://www.w3.org/2007/ont/http#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 
 <#test-list> a test:FixtureTable ;
     test:fixtures <#public-writeread-unauthn-alt> .
 
 
-<#public-writeread-unauthn-alt> a test:Test ;
+<#public-writeread-unauthn-alt> a <http://example.org/HTTPListTest>  ;
     dc:description "More elaborate HTTP vocab for PUT then GET test"@en ;
-    test:handler "Internal::Fixture::HTTPList"^^deps:CpanId ;
     test:script "http_req_res_list_unauthenticated" ;
     test:params [
         test:requests ( <#public-writeread-unauthn-alt-put-req> <#public-writeread-unauthn-alt-get-req> ) ;
@@ -37,3 +37,6 @@
             httph:content_type "text/turtle" .
             
 
+<http://example.org/HTTPListTest> rdfs:subClassOf test:ScriptClass ;
+            test:handler "Internal::Fixture::HTTPList"^^deps:CpanId .
+            
