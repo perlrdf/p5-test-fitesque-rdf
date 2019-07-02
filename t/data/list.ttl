@@ -13,7 +13,7 @@
     test:param_base <http://example.org/my-parameters#> ;
     test:script "string_found" ;
     test:params [ my:all "counter-clockwise dahut" ] .
-        
+
 <#test2> a <http://example.org/MultiTest> ;
     test:param_base <http://example.org/my-parameters#> ;
     test:script "multiplication" ;

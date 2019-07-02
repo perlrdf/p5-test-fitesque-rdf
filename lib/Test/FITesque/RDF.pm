@@ -15,7 +15,7 @@ use Test::FITesque::Test;
 use Types::Standard qw(InstanceOf);
 use Types::Namespace qw(Iri Namespace);
 use Types::Path::Tiny qw(Path);
-use Carp qw(croak);
+use Carp qw(carp croak);
 use Data::Dumper;
 use HTTP::Request;
 use HTTP::Response;
@@ -173,6 +173,7 @@ sub transform_rdf {
 		}
 		push(@instance, [$method, $params])
 	 }
+	 carp 'Test was listed as ' . $test_uri->as_string . ' but not fully described' unless scalar @instance;
 	 push(@data, \@instance);
   }
   return \@data;
