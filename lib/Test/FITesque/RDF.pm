@@ -279,6 +279,8 @@ The object of this predicate is the class of test, which again links
 contains the required C<< test:handler >> predicate, whose object
 contains the class name of the implementation of the tests.
 
+=back
+
 =head2 RDF EXAMPLE
 
 The below example starts with prefix declarations. Since this is a
