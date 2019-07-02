@@ -9,6 +9,7 @@
 
 <#test1> a  <http://example.org/SimpleTest> ;
     test:param_base <http://example.org/my-parameters#> ;
+    dc:description "Echo a string"@en ;    
     test:script "string_found" ;
     test:params [ my:all "counter-clockwise dahut" ] .
         

@@ -10,6 +10,7 @@
 
 <#test1> a <http://example.org/SimpleTest> ;
     test:param_base <http://example.org/my-parameters#> ;
+    dc:description "Check that a relative URI resolves"@en ;
     test:script "relative_uri" ;
     test:params [ my:url </foo/> ] .
         
