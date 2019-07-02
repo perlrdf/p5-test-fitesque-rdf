@@ -248,6 +248,37 @@ A L<IRI> to use in parsing the RDF fixture tables to resolve any relative URIs.
 
 =back
 
+=head2 REQUIRED RDF
+
+The following must exist in the test description (see below for an example and prefix expansions):
+
+=over
+
+=item C<< test:fixtures >>
+
+The object(s) of this predicate lists the test fixtures that will run
+for this test suite. May take an RDF List. Links to the test
+descriptions, which follow below.
+
+
+=item C<< test:script >>
+
+The object of this predicate contains the function name of the actual test script as a literal.
+
+=item C<< dc:description >>
+
+The object of this predicate provides a literal description of the test.
+
+=item C<< test:params >>
+
+The object of this predicate links to the paramaters, which may have many different shapes.
+
+=item C<< rdf:type >> aka C<<a>>
+
+The object of this predicate is the class of test, which again links
+contains the required C<< test:handler >> predicate, whose object
+contains the class name of the implementation of the tests.
+
 =head2 RDF EXAMPLE
 
 The below example starts with prefix declarations. Since this is a
@@ -264,7 +295,9 @@ concrete class name. The C<test:script> predicate is used to name the
 function within that class.
 
 The C<test:params> predicate is used to link the parameters that will
-be sent as a hashref into the function.
+be sent as a hashref into the function. The <dc:description> predicate
+is required to exist outside of the parameters, but will be included
+as a parameter as well.
 
 There are two different mechanisms for passing parameters to the test
 scripts, one is simply to pass arbitrary key-value pairs, the other is
@@ -291,12 +324,14 @@ resolution itself happens in L<URI::NamespaceMap>.
 
   <#test1> a <http://example.org/SimpleTest> ;
     test:param_base <http://example.org/my-parameters#> ;
+    dc:description "Echo a string"@en ;
     test:script "string_found" ;
     test:params [ my:all "counter-clockwise dahut" ] .
 
   <#test2> a <http://example.org/MultiTest> ;
     test:param_base <http://example.org/my-parameters#> ;
     test:script "multiplication" ;
+    dc:description "Multiply two numbers"@en ;
     test:params [
         my:factor1 6 ;
         my:factor2 7 ;

@@ -46,6 +46,34 @@ This module implements the following attributes and methods:
 
     A [IRI](https://metacpan.org/pod/IRI) to use in parsing the RDF fixture tables to resolve any relative URIs.
 
+## REQUIRED RDF
+
+The following must exist in the test description (see below for an example and prefix expansions):
+
+- `test:fixtures`
+
+    The object(s) of this predicate lists the test fixtures that will run
+    for this test suite. May take an RDF List. Links to the test
+    descriptions, which follow below.
+
+- `test:script`
+
+    The object of this predicate contains the function name of the actual test script as a literal.
+
+- `dc:description`
+
+    The object of this predicate provides a literal description of the test.
+
+- `test:params`
+
+    The object of this predicate links to the paramaters, which may have many different shapes.
+
+- `rdf:type` aka `<a`>
+
+    The object of this predicate is the class of test, which again links
+    contains the required `test:handler` predicate, whose object
+    contains the class name of the implementation of the tests.
+
 ## RDF EXAMPLE
 
 The below example starts with prefix declarations. Since this is a
@@ -62,7 +90,9 @@ concrete class name. The `test:script` predicate is used to name the
 function within that class.
 
 The `test:params` predicate is used to link the parameters that will
-be sent as a hashref into the function.
+be sent as a hashref into the function. The &lt;dc:description> predicate
+is required to exist outside of the parameters, but will be included
+as a parameter as well.
 
 There are two different mechanisms for passing parameters to the test
 scripts, one is simply to pass arbitrary key-value pairs, the other is
@@ -88,12 +118,14 @@ resolution itself happens in [URI::NamespaceMap](https://metacpan.org/pod/URI::N
 
     <#test1> a <http://example.org/SimpleTest> ;
       test:param_base <http://example.org/my-parameters#> ;
+      dc:description "Echo a string"@en ;
       test:script "string_found" ;
       test:params [ my:all "counter-clockwise dahut" ] .
 
     <#test2> a <http://example.org/MultiTest> ;
       test:param_base <http://example.org/my-parameters#> ;
       test:script "multiplication" ;
+      dc:description "Multiply two numbers"@en ;
       test:params [
           my:factor1 6 ;
           my:factor2 7 ;
@@ -149,3 +181,11 @@ This is free software, licensed under:
 THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED
 WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
 MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+# POD ERRORS
+
+Hey! **The above document had some coding errors, which are explained below:**
+
+- Around line 282:
+
+    You forgot a '=back' before '=head2'
