@@ -55,9 +55,11 @@ using the `test:fixtures` predicate will be used. Tests may be an RDF
 List, in which case, the tests will run in the specified sequence, if
 not, no sequence may be assumed.
 
-Then, two test fixtures are declared. The `test:handler` predicate is
-used to identify the class containing implementations, while
-`dc:identifier` is used to name the function within that class.
+Then, two test fixtures are declared. The RDF class of the test
+fixture is used to denote identify the Perl class containing the
+implementations, through the `test:handler` predicate which is the
+concrete class name. The `test:script` predicate is used to name the
+function within that class.
 
 The `test:params` predicate is used to link the parameters that will
 be sent as a hashref into the function.
@@ -79,26 +81,30 @@ resolution itself happens in [URI::NamespaceMap](https://metacpan.org/pod/URI::N
     @prefix deps: <http://ontologi.es/doap-deps#>.
     @prefix dc:   <http://purl.org/dc/terms/> .
     @prefix my:   <http://example.org/my-parameters#> .
-
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
     <#test-list> a test:FixtureTable ;
-      test:fixtures <#test1>, <#test2> .
+      test:fixtures ( <#test1> <#test2> ) .
 
-    <#test1> a test:Test ;
-      test:handler "Internal::Fixture::Simple"^^deps:CpanId ;
-      dc:identifier "string_found" ;
+    <#test1> a <http://example.org/SimpleTest> ;
       test:param_base <http://example.org/my-parameters#> ;
+      test:script "string_found" ;
       test:params [ my:all "counter-clockwise dahut" ] .
 
-    <#test2> a test:Test ;
-      test:handler "Internal::Fixture::Multi"^^deps:CpanId ;
-      dc:identifier "multiplication" ;
+    <#test2> a <http://example.org/MultiTest> ;
       test:param_base <http://example.org/my-parameters#> ;
+      test:script "multiplication" ;
       test:params [
           my:factor1 6 ;
           my:factor2 7 ;
           my:product 42
       ] .
+
+    <http://example.org/SimpleTest> rdfs:subClassOf test:ScriptClass ;
+      test:handler "Internal::Fixture::Simple"^^deps:CpanId .
+
+    <http://example.org/MultiTest> rdfs:subClassOf test:ScriptClass ;
+      test:handler "Internal::Fixture::Multi"^^deps:CpanId .
 
 ### HTTP request-response lists
 
