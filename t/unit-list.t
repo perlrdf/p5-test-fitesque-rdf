@@ -27,7 +27,6 @@ use Test::More;
 use Test::Deep;
 use FindBin qw($Bin);
 
-
 my $file = $Bin . '/data/list.ttl';
 
 
