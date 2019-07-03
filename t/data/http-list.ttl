@@ -38,5 +38,5 @@
             
 
 <http://example.org/HTTPListTest> rdfs:subClassOf test:ScriptClass ;
-            test:handler "Internal::Fixture::HTTPList"^^deps:CpanId .
+            deps:test-requirement "Internal::Fixture::HTTPList"^^deps:CpanId .
             

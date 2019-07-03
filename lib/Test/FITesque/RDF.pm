@@ -94,7 +94,7 @@ sub transform_rdf {
 		$ns->guess_and_add($params_base);
 	 }
 	 my $test_bgp = bgp(triplepattern($test_uri, iri($ns->rdf->type->as_string), variable('handler_class')),
-							  triplepattern(variable('handler_class'), iri($ns->test->handler->as_string), variable('handler')),
+							  triplepattern(variable('handler_class'), iri($ns->deps->as_string . 'test-requirement'), variable('handler')), # Because Perl doesn't support dashes in method names
 							  triplepattern($test_uri, iri($ns->test->script->as_string), variable('method')),
 							  triplepattern($test_uri, iri($ns->dc->description->as_string), variable('description')),
 							  triplepattern($test_uri, iri($ns->test->params->as_string), variable('paramid')));
@@ -276,7 +276,7 @@ The object of this predicate links to the paramaters, which may have many differ
 =item C<< rdf:type >> aka C<<a>>
 
 The object of this predicate is the class of test, which again links
-contains the required C<< test:handler >> predicate, whose object
+contains the required C<< deps:test-requirement >> predicate, whose object
 contains the class name of the implementation of the tests.
 
 =back
@@ -292,7 +292,7 @@ not, no sequence may be assumed.
 
 Then, two test fixtures are declared. The RDF class of the test
 fixture is used to denote identify the Perl class containing the
-implementations, through the C<test:handler> predicate which is the
+implementations, through the C<deps:test-requirement> predicate which is the
 concrete class name. The C<test:script> predicate is used to name the
 function within that class.
 
@@ -341,10 +341,10 @@ resolution itself happens in L<URI::NamespaceMap>.
     ] .
 
   <http://example.org/SimpleTest> rdfs:subClassOf test:ScriptClass ;
-    test:handler "Internal::Fixture::Simple"^^deps:CpanId .
+    deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .
 
   <http://example.org/MultiTest> rdfs:subClassOf test:ScriptClass ;
-    test:handler "Internal::Fixture::Multi"^^deps:CpanId .
+    deps:test-requirement "Internal::Fixture::Multi"^^deps:CpanId .
 
 
 
@@ -364,7 +364,7 @@ C<t/data/http-list.ttl> file for example.
 
 =head1 TODO
 
-Separate the implementation-specific details (such as C<test:handler>)
+Separate the implementation-specific details (such as C<deps:test-requirement>)
 from the actual fixture tables.
 
 =head1 BUGS

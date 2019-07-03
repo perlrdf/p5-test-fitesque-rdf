@@ -18,4 +18,4 @@
         ] .
 
 <http://example.org/SimpleTest> rdfs:subClassOf test:ScriptClass ;
-    test:handler "Internal::Fixture::Simple"^^deps:CpanId .
+    deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .

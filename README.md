@@ -71,7 +71,7 @@ The following must exist in the test description (see below for an example and p
 - `rdf:type` aka `<a`>
 
     The object of this predicate is the class of test, which again links
-    contains the required `test:handler` predicate, whose object
+    contains the required `deps:test-requirement` predicate, whose object
     contains the class name of the implementation of the tests.
 
 ## RDF EXAMPLE
@@ -85,7 +85,7 @@ not, no sequence may be assumed.
 
 Then, two test fixtures are declared. The RDF class of the test
 fixture is used to denote identify the Perl class containing the
-implementations, through the `test:handler` predicate which is the
+implementations, through the `deps:test-requirement` predicate which is the
 concrete class name. The `test:script` predicate is used to name the
 function within that class.
 
@@ -133,10 +133,10 @@ resolution itself happens in [URI::NamespaceMap](https://metacpan.org/pod/URI::N
       ] .
 
     <http://example.org/SimpleTest> rdfs:subClassOf test:ScriptClass ;
-      test:handler "Internal::Fixture::Simple"^^deps:CpanId .
+      deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .
 
     <http://example.org/MultiTest> rdfs:subClassOf test:ScriptClass ;
-      test:handler "Internal::Fixture::Multi"^^deps:CpanId .
+      deps:test-requirement "Internal::Fixture::Multi"^^deps:CpanId .
 
 ### HTTP request-response lists
 
@@ -154,7 +154,7 @@ This gets more complex, please see the test data file
 
 # TODO
 
-Separate the implementation-specific details (such as `test:handler`)
+Separate the implementation-specific details (such as `deps:test-requirement`)
 from the actual fixture tables.
 
 # BUGS
