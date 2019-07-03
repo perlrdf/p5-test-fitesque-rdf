@@ -94,7 +94,7 @@ sub transform_rdf {
 		$ns->guess_and_add($params_base);
 	 }
 	 my $test_bgp = bgp(triplepattern($test_uri, iri($ns->rdf->type->as_string), variable('handler_class')),
-							  triplepattern(variable('handler_class'), iri($ns->deps->as_string . 'test-requirement'), variable('handler')), # Because Perl doesn't support dashes in method names
+							  triplepattern(variable('handler_class'), iri($ns->deps->iri('test-requirement')->as_string), variable('handler')), # Because Perl doesn't support dashes in method names
 							  triplepattern($test_uri, iri($ns->test->script->as_string), variable('method')),
 							  triplepattern($test_uri, iri($ns->dc->description->as_string), variable('description')),
 							  triplepattern($test_uri, iri($ns->test->params->as_string), variable('paramid')));
