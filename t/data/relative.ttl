@@ -14,5 +14,6 @@
     test:script "relative_uri" ;
     test:params [ my:url </foo/> ] .
         
-<http://example.org/SimpleTest> rdfs:subClassOf test:ScriptClass ;
+<http://example.org/simple#string_found> a nfo:SoftwareItem ;
+    nfo:definesFunction "string_found" ;
     deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .

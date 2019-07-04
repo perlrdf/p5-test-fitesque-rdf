@@ -10,9 +10,10 @@
 <#test1> a  <http://example.org/SimpleTest> ;
     test:param_base <http://example.org/my-parameters#> ;
     test:purpose "Echo a string"@en ;    
-    test:script "string_found" ;
+    test:test_script <http://example.org/simple#string_found> ;
     test:params [ my:all "counter-clockwise dahut" ] .
         
-<http://example.org/SimpleTest> rdfs:subClassOf test:ScriptClass ;
+<http://example.org/simple#string_found> a nfo:SoftwareItem ;
+    nfo:definesFunction "string_found" ;
     deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .
     
