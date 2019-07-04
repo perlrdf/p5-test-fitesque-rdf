@@ -11,13 +11,13 @@
 
 <#test1> a <http://example.org/SimpleTest> ;
     test:param_base <http://example.org/my-parameters#> ;
-    dc:description "Echo a string"@en ;
+    test:purpose "Echo a string"@en ;
     test:script "string_found" ;
     test:params [ my:all "counter-clockwise dahut" ] .
 
 <#test2> a <http://example.org/MultiTest> ;
     test:param_base <http://example.org/my-parameters#> ;
-    dc:description "Multiply two numbers"@en ;
+    test:purpose "Multiply two numbers"@en ;
     test:script "multiplication" ;
     test:params [
         my:factor1 6 ;
