@@ -1,5 +1,17 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.009 cpan:KJETILK`
+    issued  2019-07-04;
+    label   "Improve vocabulary usage" ;
+    changeset [
+        dcs:versus `Test-FITesque-RDF 0.008 cpan:KJETILK`;
+        item [ rdfs:label "Improve Travis usage."; a dcs:Change; ];
+        item [ rdfs:label "Some improvements to how ontologies are used."; a dcs:Change; ];
+        item [ rdfs:label "Improve documentation."; a dcs:Addition; ];
+        item [ rdfs:label "Tests for multi-field values."; a dcs:Addition; ];
+        item [ rdfs:label "Improve error handling."; a dcs:Addition; ]
+    ] .
+
 `Test-FITesque-RDF 0.008 cpan:KJETILK`
     issued  2019-06-20;
     label   "Fix bug in HTTP param selection".

@@ -5,7 +5,7 @@ use warnings;
 package Test::FITesque::RDF;
 
 our $AUTHORITY = 'cpan:KJETILK';
-our $VERSION   = '0.008';
+our $VERSION   = '0.009';
 
 use Moo;
 use Attean::RDF;
