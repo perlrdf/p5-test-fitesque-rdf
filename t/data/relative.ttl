@@ -11,9 +11,9 @@
 <#test1> a <http://example.org/SimpleTest> ;
     test:param_base <http://example.org/my-parameters#> ;
     test:purpose "Check that a relative URI resolves"@en ;
-    test:script "relative_uri" ;
+    test:test_script <http://example.org/simple#relative_uri> ;
     test:params [ my:url </foo/> ] .
         
-<http://example.org/simple#string_found> a nfo:SoftwareItem ;
-    nfo:definesFunction "string_found" ;
+<http://example.org/simple#relative_uri> a nfo:SoftwareItem ;
+    nfo:definesFunction "relative_uri" ;
     deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .
