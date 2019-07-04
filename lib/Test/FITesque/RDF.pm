@@ -56,9 +56,10 @@ sub _build_suite {
 sub transform_rdf {
   my $self = shift;
   my $ns = URI::NamespaceMap->new(['deps', 'dc', 'rdf']);
-  $ns->add_mapping(test => 'http://example.org/test-fixtures#'); # TODO: Get a proper URI
+  $ns->add_mapping(test => 'http://ontologi.es/doap-tests#');
   $ns->add_mapping(http => 'http://www.w3.org/2007/ont/http#');
   $ns->add_mapping(httph => 'http://www.w3.org/2007/ont/httph#');
+  $ns->add_mapping(nfo => 'http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#');
   my $parser = Attean->get_parser(filename => $self->source)->new( base => $self->base_uri );
   my $model = Attean->temporary_model;
 
@@ -93,10 +94,10 @@ sub transform_rdf {
 		$params_base = URI::Namespace->new($params_base_term);
 		$ns->guess_and_add($params_base);
 	 }
-	 my $test_bgp = bgp(triplepattern($test_uri, iri($ns->rdf->type->as_string), variable('handler_class')),
-							  triplepattern(variable('handler_class'), iri($ns->deps->iri('test-requirement')->as_string), variable('handler')), # Because Perl doesn't support dashes in method names
-							  triplepattern($test_uri, iri($ns->test->script->as_string), variable('method')),
-							  triplepattern($test_uri, iri($ns->dc->description->as_string), variable('description')),
+	 my $test_bgp = bgp(triplepattern($test_uri, iri($ns->test->test_script->as_string), variable('script_class')),
+							  triplepattern(variable('script_class'), iri($ns->deps->iri('test-requirement')->as_string), variable('handler')), # Because Perl doesn't support dashes in method names
+							  triplepattern(variable('script_class'), iri($ns->nfo->definesFunction->as_string), variable('method')),
+							  triplepattern($test_uri, iri($ns->test->purpose->as_string), variable('description')),
 							  triplepattern($test_uri, iri($ns->test->params->as_string), variable('paramid')));
 
 	 my $algebra = Attean::Algebra::Query->new(children => [$test_bgp]); # TODO: generalize the next 4 lines in Attean
