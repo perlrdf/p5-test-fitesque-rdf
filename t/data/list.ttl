@@ -18,7 +18,7 @@
 <#test2> a <http://example.org/MultiTest> ;
     test:param_base <http://example.org/my-parameters#> ;
     test:purpose "Multiply two numbers"@en ;
-    test:script "multiplication" ;
+    test:test_script <http://example.org/multi#multiplication> ;
     test:params [
         my:factor1 6 ;
         my:factor2 7 ;
@@ -29,5 +29,6 @@
     nfo:definesFunction "string_found" ;
     deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .
 
-<http://example.org/MultiTest> rdfs:subClassOf test:ScriptClass ;
+<http://example.org/multi#multiplication> a nfo:SoftwareItem ;
+    nfo:definesFunction "multiplication" ;
     deps:test-requirement "Internal::Fixture::Multi"^^deps:CpanId .
