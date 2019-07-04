@@ -7,7 +7,7 @@
     :test-requirement       [ :on "Test::Modern"^^:CpanId ];
     :test-requirement       [ :on "Test::Deep"^^:CpanId ];
     :test-requirement       [ :on "FindBin"^^:CpanId ];
-    :runtime-requirement    [ :on "perl 5.010001"^^:CpanId ];
+    :runtime-requirement    [ :on "perl 5.014"^^:CpanId ];
     :runtime-requirement    [ :on "LWP::UserAgent"^^:CpanId ];
     :runtime-requirement    [ :on "Types::Path::Tiny"^^:CpanId ];
     :runtime-requirement    [ :on "Moo 1.006000"^^:CpanId ];
