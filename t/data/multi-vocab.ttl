@@ -1,8 +1,8 @@
-@prefix test: <http://example.org/test-fixtures#> .
+@prefix test: <http://ontologi.es/doap-tests#> .
 @prefix deps: <http://ontologi.es/doap-deps#>.
 @prefix dc:   <http://purl.org/dc/terms/> .
 @prefix my:   <http://example.org/my-parameters#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix nfo:  <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#> .
 
 
 <#test-list> a test:FixtureTable ;
