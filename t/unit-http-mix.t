@@ -4,7 +4,7 @@
 
 =head1 PURPOSE
 
-Unit test that Test::FITesque::RDF transforms HTTP data correctly from RDF
+Unit test that Test::FITesque::RDF transforms both basic key-value parameters and HTTP data correctly from RDF
 
 =head1 AUTHOR
 
