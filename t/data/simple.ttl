@@ -7,7 +7,7 @@
 <#test-list> a test:FixtureTable ;
     test:fixtures <#test1> . 
 
-<#test1> a  <http://example.org/SimpleTest> ;
+<#test1> a  test:AutomatedTest ;
     test:param_base <http://example.org/my-parameters#> ;
     test:purpose "Echo a string"@en ;    
     test:test_script <http://example.org/simple#string_found> ;
