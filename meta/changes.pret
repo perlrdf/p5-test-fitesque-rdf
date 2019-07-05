@@ -1,5 +1,14 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.010 cpan:KJETILK`
+    issued  2019-07-05;
+    label   "Adapt to existing vocabularies" ;
+    changeset [
+        dcs:versus `Test-FITesque-RDF 0.009 cpan:KJETILK`;
+        item [ rdfs:label "Adapt to existing vocabularies."; a dcs:Change; ];
+        item [ rdfs:label "Allow mixing parameters."; a dcs:Change; ]
+    ] .
+
 `Test-FITesque-RDF 0.009 cpan:KJETILK`
     issued  2019-07-04;
     label   "Improve vocabulary usage" ;
