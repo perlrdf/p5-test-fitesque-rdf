@@ -1,18 +1,19 @@
-@prefix test: <http://example.org/test-fixtures#> .
+@prefix test: <http://ontologi.es/doap-tests#> .
 @prefix deps: <http://ontologi.es/doap-deps#>.
 @prefix dc:   <http://purl.org/dc/terms/> .
 @prefix my:   <http://example.org/my-parameters#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix nfo:  <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#> .
 
 <#test-list> a test:FixtureTable ;
     test:fixtures <#test1> . 
 
-<#test1> a  <http://example.org/SimpleTest> ;
+<#test1> a  test:AutomatedTest ;
     test:param_base <http://example.org/my-parameters#> ;
-    dc:description "Echo a string"@en ;    
-    test:script "string_found" ;
+    test:purpose "Echo a string"@en ;    
+    test:test_script <http://example.org/simple#string_found> ;
     test:params [ my:all "counter-clockwise dahut" ] .
         
-<http://example.org/SimpleTest> rdfs:subClassOf test:ScriptClass ;
+<http://example.org/simple#string_found> a nfo:SoftwareItem ;
+    nfo:definesFunction "string_found" ;
     deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .
     
