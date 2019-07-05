@@ -42,7 +42,7 @@ my $t = object_ok(
 
 
 my $data = $t->transform_rdf;
-#warn Data::Dumper::Dumper($data);
+
 cmp_deeply($data,
 			  [
 				[
