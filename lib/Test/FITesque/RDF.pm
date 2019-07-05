@@ -164,7 +164,8 @@ sub transform_rdf {
 				push(@responses, $res);
 			 }
 			 $params->{'http-responses'} = \@responses;
-		  } else {
+		  }
+		  if ($param->object->is_literal || $param->object->is_iri) {
 			 my $key = $param->predicate->as_string;
 			 if (defined($params_base) && $params_base->local_part($param->predicate)) {
 				$key = $params_base->local_part($param->predicate)
