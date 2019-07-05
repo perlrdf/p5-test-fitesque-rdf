@@ -5,7 +5,7 @@ use warnings;
 package Test::FITesque::RDF;
 
 our $AUTHORITY = 'cpan:KJETILK';
-our $VERSION   = '0.009';
+our $VERSION   = '0.010';
 
 use Moo;
 use Attean::RDF;
@@ -263,23 +263,23 @@ for this test suite. May take an RDF List. Links to the test
 descriptions, which follow below.
 
 
-=item C<< test:script >>
+=item C<< test:test_script >>
 
-The object of this predicate contains the function name of the actual test script as a literal.
+The object of this predicate points to information on how the actual
+test will be run. That is formulated in a separate resource which
+requires two predicates, C<< deps:test-requirement >> predicate, whose
+object contains the class name of the implementation of the tests; and
+C<< nfo:definesFunction >> whose object is a string which matches the
+actual function name withing that class.
 
-=item C<< dc:description >>
+=item C<< test:purpose >>
 
 The object of this predicate provides a literal description of the test.
 
 =item C<< test:params >>
 
-The object of this predicate links to the paramaters, which may have many different shapes.
-
-=item C<< rdf:type >> aka C<<a>>
-
-The object of this predicate is the class of test, which again links
-contains the required C<< deps:test-requirement >> predicate, whose object
-contains the class name of the implementation of the tests.
+The object of this predicate links to the parameters, which may have
+many different shapes. See below for examples.
 
 =back
 
@@ -292,20 +292,17 @@ using the C<test:fixtures> predicate will be used. Tests may be an RDF
 List, in which case, the tests will run in the specified sequence, if
 not, no sequence may be assumed.
 
-Then, two test fixtures are declared. The RDF class of the test
-fixture is used to denote identify the Perl class containing the
-implementations, through the C<deps:test-requirement> predicate which is the
-concrete class name. The C<test:script> predicate is used to name the
-function within that class.
+Then, two test fixtures are declared. The actual implementation is
+referenced through C<test:test_script> for both functions.
 
 The C<test:params> predicate is used to link the parameters that will
-be sent as a hashref into the function. The <dc:description> predicate
+be sent as a hashref into the function. The <test:purpose> predicate
 is required to exist outside of the parameters, but will be included
-as a parameter as well.
+as a parameter as well, named C<description>.
 
-There are two different mechanisms for passing parameters to the test
-scripts, one is simply to pass arbitrary key-value pairs, the other is
-to pass lists of HTTP request-response objects.
+There are two mechanisms for passing parameters to the test scripts,
+one is simply to pass arbitrary key-value pairs, the other is to pass
+lists of HTTP request-response objects. Both mechanisms may be used.
 
 =head3 Key-value parameters
 
@@ -316,36 +313,37 @@ the parameters, and the C<param_base> is used to set indicate the
 namespace, so that the local part can be resolved, if wanted. The
 resolution itself happens in L<URI::NamespaceMap>.
 
+ @prefix test: <http://ontologi.es/doap-tests#> .
+ @prefix deps: <http://ontologi.es/doap-deps#>.
+ @prefix my:   <http://example.org/my-parameters#> .
+ @prefix nfo:  <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#> .
 
-  @prefix test: <http://example.org/test-fixtures#> .
-  @prefix deps: <http://ontologi.es/doap-deps#>.
-  @prefix dc:   <http://purl.org/dc/terms/> .
-  @prefix my:   <http://example.org/my-parameters#> .
-  @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
-  <#test-list> a test:FixtureTable ;
-    test:fixtures ( <#test1> <#test2> ) .
+ <#test-list> a test:FixtureTable ;
+    test:fixtures <#test1>, <#test2> . 
 
-  <#test1> a <http://example.org/SimpleTest> ;
+ <#test1> a test:AutomatedTest ;
     test:param_base <http://example.org/my-parameters#> ;
-    dc:description "Echo a string"@en ;
-    test:script "string_found" ;
+    test:purpose "Echo a string"@en ;    
+    test:test_script <http://example.org/simple#string_found> ;
     test:params [ my:all "counter-clockwise dahut" ] .
-
-  <#test2> a <http://example.org/MultiTest> ;
+        
+ <#test2> a test:AutomatedTest ;
     test:param_base <http://example.org/my-parameters#> ;
-    test:script "multiplication" ;
-    dc:description "Multiply two numbers"@en ;
+    test:purpose "Multiply two numbers"@en ;
+    test:test_script <http://example.org/multi#multiplication> ;
     test:params [
         my:factor1 6 ;
         my:factor2 7 ;
-        my:product 42
+        my:product 42 
     ] .
-
-  <http://example.org/SimpleTest> rdfs:subClassOf test:ScriptClass ;
+        
+ <http://example.org/simple#string_found> a nfo:SoftwareItem ;
+    nfo:definesFunction "string_found" ;
     deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .
 
-  <http://example.org/MultiTest> rdfs:subClassOf test:ScriptClass ;
+ <http://example.org/multi#multiplication> a nfo:SoftwareItem ;
+    nfo:definesFunction "multiplication" ;
     deps:test-requirement "Internal::Fixture::Multi"^^deps:CpanId .
 
 
@@ -363,6 +361,13 @@ the test fixture.
 
 This gets more complex, please see the test data file
 C<t/data/http-list.ttl> file for example.
+
+You may maintain client state in a test script (i.e. for one
+C<test:AutomatedTest>, as it is simply one script, so the result of
+one request may be used to influence the next. Server state can be
+relied on between different tests by using an C<rdf:List> of test
+fixtures if it writes something into the server, there is nothing in
+the framework that changes that.
 
 =head1 TODO
 
