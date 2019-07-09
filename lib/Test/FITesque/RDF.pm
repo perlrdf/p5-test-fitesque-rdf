@@ -59,6 +59,7 @@ sub transform_rdf {
   $ns->add_mapping(test => 'http://ontologi.es/doap-tests#');
   $ns->add_mapping(http => 'http://www.w3.org/2007/ont/http#');
   $ns->add_mapping(httph => 'http://www.w3.org/2007/ont/httph#');
+  $ns->add_mapping(dqn => 'http://purl.org/dqm-vocabulary/v1/dqm#');
   $ns->add_mapping(nfo => 'http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#');
   my $parser = Attean->get_parser(filename => $self->source)->new( base => $self->base_uri );
   my $model = Attean->temporary_model;
@@ -116,6 +117,7 @@ sub transform_rdf {
 		  my $res_head = $model->objects($param->subject, iri($ns->test->responses->as_string))->next;
 		  my @requests;
 		  my @responses;
+		  my @regexps;
 
 		  if ($req_head && $res_head) { # TODO: Test role?
 			 # There is a list of HTTP requests and responses
@@ -158,7 +160,11 @@ sub transform_rdf {
 				  if ($res_data->predicate->equals($ns->http->status)) {
 					 $res->code($res_data->object->value);
 				  } elsif (defined($local_header)) {
-					 $res->push_header(_find_header($local_header, $res_data));
+					 my $header_name = _find_header($local_header, $res_data);
+					 $res->push_header($header_name);
+					 if ($res_data->object->is_literal && $res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
+						push(@regexps, {$header_name => 1});
+					 }
 				  }
 				}
 				push(@responses, $res);
