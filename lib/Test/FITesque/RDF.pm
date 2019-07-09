@@ -109,7 +109,7 @@ sub transform_rdf {
 		push(@instance, [$test->value('handler')->value]);
 		my $method = $test->value('method')->value;
 		my $params_iter = $model->get_quads($test->value('paramid')); # Get the parameters for each test
-		my $params = {description => $test->value('description')->value}; # Description should always be present
+		my $params->{'-special'} = {description => $test->value('description')->value}; # Description should always be present
 		while (my $param = $params_iter->next) {
 		  # First, see if there are HTTP request-responses that can be constructed
 		  my $req_head = $model->objects($param->subject, iri($ns->test->requests->as_string))->next;
@@ -283,6 +283,25 @@ many different shapes. See below for examples.
 
 =back
 
+=head2 PARAMETERIZATION
+
+This module seeks to parameterize the tests, and does so using mostly
+the C<test:params> predicate above. This is passed on as a hashref to
+the test scripts.
+
+There are two main ways currently implemented, one creates key-value
+pairs, and uses predicates and objects for that respectively, in
+vocabularies chosen by the test writer. The other main way is create
+lists of HTTP requests and responses.
+
+Additionally, a special parameter C<-special> is passed on for
+internal framework use. The leading dash is not allowed as the start
+character of a local name, and therefore chosen to avoid conflicts
+with other parameters.
+
+The literal given in C<test:purpose> above is passed on as with the
+C<description> key in this hashref.
+
 =head2 RDF EXAMPLE
 
 The below example starts with prefix declarations. Since this is a
@@ -298,7 +317,8 @@ referenced through C<test:test_script> for both functions.
 The C<test:params> predicate is used to link the parameters that will
 be sent as a hashref into the function. The <test:purpose> predicate
 is required to exist outside of the parameters, but will be included
-as a parameter as well, named C<description>.
+as a parameter as well, named C<description> in the C<-special>
+hashref.
 
 There are two mechanisms for passing parameters to the test scripts,
 one is simply to pass arbitrary key-value pairs, the other is to pass
