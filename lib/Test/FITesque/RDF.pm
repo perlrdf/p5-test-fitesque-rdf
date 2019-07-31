@@ -59,7 +59,7 @@ sub transform_rdf {
   $ns->add_mapping(test => 'http://ontologi.es/doap-tests#');
   $ns->add_mapping(http => 'http://www.w3.org/2007/ont/http#');
   $ns->add_mapping(httph => 'http://www.w3.org/2007/ont/httph#');
-  $ns->add_mapping(dqn => 'http://purl.org/dqm-vocabulary/v1/dqm#');
+  $ns->add_mapping(dqm => 'http://purl.org/dqm-vocabulary/v1/dqm#');
   $ns->add_mapping(nfo => 'http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#');
   my $parser = Attean->get_parser(filename => $self->source)->new( base => $self->base_uri );
   my $model = Attean->temporary_model;
@@ -160,10 +160,10 @@ sub transform_rdf {
 				  if ($res_data->predicate->equals($ns->http->status)) {
 					 $res->code($res_data->object->value);
 				  } elsif (defined($local_header)) {
-					 my $header_name = _find_header($local_header, $res_data);
-					 $res->push_header($header_name);
+					 my %header_pair = _find_header($local_header, $res_data);
+					 $res->push_header(%header_pair);
 					 if ($res_data->object->is_literal && $res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
-						push(@regexps, {$header_name => 1});
+						push(@regexps, {keys(%header_pair) => 1});
 					 }
 				  }
 				}
