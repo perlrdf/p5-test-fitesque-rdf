@@ -110,7 +110,8 @@ sub transform_rdf {
 		push(@instance, [$test->value('handler')->value]);
 		my $method = $test->value('method')->value;
 		my $params_iter = $model->get_quads($test->value('paramid')); # Get the parameters for each test
-		my $params->{'-special'} = {description => $test->value('description')->value}; # Description should always be present
+		my $params;
+		$params->{'-special'} = {description => $test->value('description')->value}; # Description should always be present
 		while (my $param = $params_iter->next) {
 		  # First, see if there are HTTP request-responses that can be constructed
 		  my $req_head = $model->objects($param->subject, iri($ns->test->requests->as_string))->next;
@@ -170,6 +171,7 @@ sub transform_rdf {
 				push(@responses, $res);
 			 }
 			 $params->{'http-responses'} = \@responses;
+			 $params->{'-special'}->{'regex-fields'} = \@regexps;
 		  }
 		  if ($param->object->is_literal || $param->object->is_iri) {
 			 my $key = $param->predicate->as_string;
