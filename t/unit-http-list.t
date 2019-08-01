@@ -54,7 +54,7 @@ cmp_deeply($data,
               {
 					'http-requests' => ignore(),
 					'http-responses' => ignore(),
-					'description' => 'More elaborate HTTP vocab for PUT then GET test',
+					'-special' => { 'description' => 'More elaborate HTTP vocab for PUT then GET test'},
               }
             ]
           ]

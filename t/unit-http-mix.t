@@ -55,7 +55,7 @@ cmp_deeply($data,
 					'user' => 'alice',
 					'http-requests' => ignore(),
 					'http-responses' => ignore(),
-					'description' => 'Mix HTTP and ordinary params.',
+					'-special' => { 'description' => 'Mix HTTP and ordinary params.' },
               }
             ]
           ]
