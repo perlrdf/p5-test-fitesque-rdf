@@ -150,12 +150,13 @@ sub transform_rdf {
 				}
 				push(@requests, $req);
 			 }
-			 $params->{'http-requests'} = \@requests;
+			 $params->{'-special'}->{'http-requests'} = \@requests;
 
 			 my $res_iter = $model->get_list($graph_id, $res_head);
 			 while (my $res_subject = $res_iter->next) {
 				my $res = HTTP::Response->new;
 				my $res_entry_iter = $model->get_quads($res_subject);
+				my $regex_headers = {};
 				while (my $res_data = $res_entry_iter->next) {
 				  my $local_header = $ns->httph->local_part($res_data->predicate);
 				  if ($res_data->predicate->equals($ns->http->status)) {
@@ -164,13 +165,15 @@ sub transform_rdf {
 					 my %header_pair = _find_header($local_header, $res_data);
 					 $res->push_header(%header_pair);
 					 if ($res_data->object->is_literal && $res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
-						push(@regexps, {keys(%header_pair) => 1});
+						my @header = keys(%header_pair); # TODO: Refactor this, this is a a smelly part of Perl
+						$regex_headers->{$header[0]} = 1;
 					 }
 				  }
 				}
+				push(@regexps, $regex_headers);
 				push(@responses, $res);
 			 }
-			 $params->{'http-responses'} = \@responses;
+			 $params->{'-special'}->{'http-responses'} = \@responses;
 			 $params->{'-special'}->{'regex-fields'} = \@regexps;
 		  }
 		  if ($param->object->is_literal || $param->object->is_iri) {

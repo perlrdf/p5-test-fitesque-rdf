@@ -43,6 +43,7 @@ my $t = object_ok(
 
 my $data = $t->transform_rdf;
 
+#warn Dumper($data);
 cmp_deeply($data,
 [
           [
@@ -52,19 +53,29 @@ cmp_deeply($data,
             [
               'http_req_res_list_regex',
               {
-					'http-requests' => ignore(),
-					'http-responses' => ignore(),
-					'-special' => { 'description' => 'Test fields with regexsps',
-										 'regex-fields' => [ { 'Link' => 1 } ]
+					'-special' => {
+										'http-requests' => ignore(),
+										'http-responses' => ignore(),
+										'description' => 'Test fields with regexps',
+										'regex-fields' => [
+																 {
+																  'Link' => 1
+																 },
+																 {},
+																 {
+																  'Other-Header' => 1,
+																  'Location' => 1
+																 }
+																],
 									  },
               }
             ]
           ]
         ], 'Main structure ok');
 
-# my $params = $data->[0]->[1]->[1];
+my $params = $data->[0]->[1]->[1]->{'-special'};
 
-# is(scalar @{$params->{'http-requests'}}, 2, 'There are two requests');
+is(scalar @{$params->{'http-requests'}}, 3, 'There are three requests');
 
 # foreach my $req (@{$params->{'http-requests'}}) {
 #   object_ok($req, 'Checking request object',
@@ -79,7 +90,7 @@ cmp_deeply($data,
 # like(${$params->{'http-requests'}}[0]->content, qr/dahut/, 'First request has content');
 
 
-# is(scalar @{$params->{'http-responses'}}, 2, 'There are two responses');
+is(scalar @{$params->{'http-responses'}}, 3, 'There are three responses');
 
 # foreach my $res (@{$params->{'http-responses'}}) {
 #   object_ok($res, 'Checking response object',
