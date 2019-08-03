@@ -279,7 +279,7 @@ test will be run. That is formulated in a separate resource which
 requires two predicates, C<< deps:test-requirement >> predicate, whose
 object contains the class name of the implementation of the tests; and
 C<< nfo:definesFunction >> whose object is a string which matches the
-actual function name withing that class.
+actual function name within that class.
 
 =item C<< test:purpose >>
 
@@ -389,7 +389,9 @@ L<HTTP::Request> and L<HTTP::Response> objects respectively. In tests
 scripts, the request objects will typically be passed to the
 L<LWP::UserAgent> as input, and then the response from the remote
 server will be compared with the expected L<HTTP::Response>s made by
-the test fixture.
+the test fixture. These will then be passed as arrayrefs below the
+C<-special> key with the keys C<http-requests> and C<http-responses>
+respectively.
 
 This gets more complex, please see the test data file
 C<t/data/http-list.ttl> file for example.
@@ -400,6 +402,20 @@ one request may be used to influence the next. Server state can be
 relied on between different tests by using an C<rdf:List> of test
 fixtures if it writes something into the server, there is nothing in
 the framework that changes that.
+
+To use data from one response to influence subsequent requests, the
+framework supports datatyping literals with the C<dqm:regex> datatype,
+for example:
+
+ :check_acl_location_res a http:ResponseMessage ;
+    httph:link '<(.*?)>;\\s+rel="acl"'^^dqm:regex ;
+    http:status 200 .
+
+This makes it possible to use a Perl regular expression, which can be
+executed in a test script if desired. If present, it will supply
+another arrayref to the C<-special> key with the key C<regex-fields>
+containing hashrefs with the header field that had a correspondiing
+object datatyped regex as key and simply C<1> as value.
 
 =head1 TODO
 
