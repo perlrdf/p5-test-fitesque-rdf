@@ -1,5 +1,16 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.011 cpan:KJETILK`
+    issued  2019-08-03;
+    label   "Implement regular expressions for stateful tests" ;
+    changeset [
+        dcs:versus `Test-FITesque-RDF 0.010 cpan:KJETILK`;
+        item [ rdfs:label "Support regular expressions with a new array."; a dcs:Addition; ];
+        item [ rdfs:label "Improve documentation."; a dcs:Addition; ];
+	item [ rdfs:label "Introduce a -special key to the parameters to group all internal additions."; a dcs:Change; ];
+        item [ rdfs:label "Some minor fixes."; a dcs:Change; ]
+    ] .
+
 `Test-FITesque-RDF 0.010 cpan:KJETILK`
     issued  2019-07-05;
     label   "Adapt to existing vocabularies" ;
