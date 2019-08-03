@@ -21,6 +21,7 @@ use HTTP::Request;
 use HTTP::Response;
 use LWP::UserAgent;
 use Try::Tiny;
+use Attean::SimpleQueryEvaluator;
 
 has source => (
 					is      => 'ro',
@@ -101,10 +102,8 @@ sub transform_rdf {
 							  triplepattern($test_uri, iri($ns->test->purpose->as_string), variable('description')),
 							  triplepattern($test_uri, iri($ns->test->params->as_string), variable('paramid')));
 
-	 my $algebra = Attean::Algebra::Query->new(children => [$test_bgp]); # TODO: generalize the next 4 lines in Attean
-	 my $planner = Attean::IDPQueryPlanner->new();
-	 my $plan = $planner->plan_for_algebra($algebra, $model, $graph_id);
-	 my $test_iter = $plan->evaluate($model); # Each row will correspond to one test
+	 my $e = Attean::SimpleQueryEvaluator->new( model => $model, default_graph => $graph_id );
+	 my $test_iter = $e->evaluate( $test_bgp, $graph_id); # Each row will correspond to one test
 
 	 while (my $test = $test_iter->next) {
 		push(@instance, [$test->value('handler')->value]);
