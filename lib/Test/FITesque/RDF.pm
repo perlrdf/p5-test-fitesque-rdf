@@ -145,7 +145,7 @@ sub transform_rdf {
 						}
 					 }
 				  } elsif (defined($local_header)) {
-					 $req->push_header(_find_header($local_header, $req_data));
+					 $req->push_header(_find_header($local_header) => $req_data->object->value);
 				  }
 				}
 				push(@requests, $req);
@@ -162,11 +162,10 @@ sub transform_rdf {
 				  if ($res_data->predicate->equals($ns->http->status)) {
 					 $res->code($res_data->object->value);
 				  } elsif (defined($local_header)) {
-					 my %header_pair = _find_header($local_header, $res_data);
-					 $res->push_header(%header_pair);
+					 my $local_header = _find_header($local_header);
+					 $res->push_header($local_header => $res_data->object->value);
 					 if ($res_data->object->is_literal && $res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
-						my @header = keys(%header_pair); # TODO: Refactor this, this is a a smelly part of Perl
-						$regex_headers->{$header[0]} = 1;
+						$regex_headers->{$local_header} = 1;
 					 }
 				  }
 				}
@@ -194,10 +193,10 @@ sub transform_rdf {
 }
 
 sub _find_header {
-  my ($local_header, $data) = @_;
+  my $local_header = shift;
   $local_header =~ s/_/-/g; # Some heuristics for creating HTTP headers
   $local_header =~ s/\b(\w)/\u$1/g;
-  return ($local_header => $data->object->value)
+  return $local_header;
 }
 
 1;
