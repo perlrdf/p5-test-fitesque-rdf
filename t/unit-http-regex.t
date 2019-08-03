@@ -79,7 +79,7 @@ is(scalar @{$params->{'http-requests'}}, 3, 'There are three requests');
 
 is(scalar @{$params->{'http-responses'}}, 3, 'There are three responses');
 
-# TODO: Test retrieving content from URI
+like(${$params->{'http-responses'}}[0]->header('Link'), qr|;\\s|, 'Should be single escaped');
 
 done_testing;
 
