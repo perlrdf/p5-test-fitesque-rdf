@@ -342,31 +342,34 @@ the parameters, and the C<param_base> is used to set indicate the
 namespace, so that the local part can be resolved, if wanted. The
 resolution itself happens in L<URI::NamespaceMap>.
 
+
  @prefix test: <http://ontologi.es/doap-tests#> .
  @prefix deps: <http://ontologi.es/doap-deps#>.
+ @prefix dc:   <http://purl.org/dc/terms/> .
  @prefix my:   <http://example.org/my-parameters#> .
  @prefix nfo:  <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#> .
+ @prefix :     <http://example.org/test#> .
 
 
- <#test-list> a test:FixtureTable ;
-    test:fixtures <#test1>, <#test2> . 
+ :test_list a test:FixtureTable ;
+    test:fixtures :test1, :test2 .
 
- <#test1> a test:AutomatedTest ;
+ :test1 a test:AutomatedTest ;
     test:param_base <http://example.org/my-parameters#> ;
-    test:purpose "Echo a string"@en ;    
+    test:purpose "Echo a string"@en ;
     test:test_script <http://example.org/simple#string_found> ;
     test:params [ my:all "counter-clockwise dahut" ] .
-        
- <#test2> a test:AutomatedTest ;
+
+ :test2 a test:AutomatedTest ;
     test:param_base <http://example.org/my-parameters#> ;
     test:purpose "Multiply two numbers"@en ;
     test:test_script <http://example.org/multi#multiplication> ;
     test:params [
         my:factor1 6 ;
         my:factor2 7 ;
-        my:product 42 
+        my:product 42
     ] .
-        
+
  <http://example.org/simple#string_found> a nfo:SoftwareItem ;
     nfo:definesFunction "string_found" ;
     deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .
