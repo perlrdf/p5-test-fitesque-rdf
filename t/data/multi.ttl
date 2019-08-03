@@ -6,14 +6,14 @@
 
 
 <#test-list> a test:FixtureTable ;
-    test:fixtures <#test1>, <#test2> . 
+    test:fixtures <#test1>, <#test2> .
 
 <#test1> a test:AutomatedTest ;
     test:param_base <http://example.org/my-parameters#> ;
-    test:purpose "Echo a string"@en ;    
+    test:purpose "Echo a string"@en ;
     test:test_script <http://example.org/simple#string_found> ;
     test:params [ my:all "counter-clockwise dahut" ] .
-        
+
 <#test2> a test:AutomatedTest ;
     test:param_base <http://example.org/my-parameters#> ;
     test:purpose "Multiply two numbers"@en ;
@@ -23,7 +23,7 @@
         my:factor2 7 ;
         my:product 42 
     ] .
-        
+
 <http://example.org/simple#string_found> a nfo:SoftwareItem ;
     nfo:definesFunction "string_found" ;
     deps:test-requirement "Internal::Fixture::Simple"^^deps:CpanId .
