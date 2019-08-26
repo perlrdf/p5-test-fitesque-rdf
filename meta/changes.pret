@@ -1,5 +1,13 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.012 cpan:KJETILK`
+    issued  2019-08-26;
+    label   "Passing URIs as parameters" ;
+    changeset [
+        dcs:versus `Test-FITesque-RDF 0.011 cpan:KJETILK`;
+        item [ rdfs:label "If the object of a parameter is a IRI, pass a URI object."; a dcs:Addition; ] 
+    ] .
+
 `Test-FITesque-RDF 0.011 cpan:KJETILK`
     issued  2019-08-03;
     label   "Implement regular expressions for stateful tests" ;
