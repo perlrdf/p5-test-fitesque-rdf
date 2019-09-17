@@ -113,66 +113,73 @@ sub transform_rdf {
 		$params->{'-special'} = {description => $test->value('description')->value}; # Description should always be present
 		while (my $param = $params_iter->next) {
 		  # First, see if there are HTTP request-responses that can be constructed
-		  my $req_head = $model->objects($param->subject, iri($ns->test->requests->as_string))->next;
-		  my $res_head = $model->objects($param->subject, iri($ns->test->responses->as_string))->next;
-		  my @requests;
-		  my @responses;
-		  my @regexps;
+		  my $pairs_head = $model->objects($param->subject, iri($ns->test->steps->as_string))->next;
+		  my @pairs;
 
-		  if ($req_head && $res_head) { # TODO: Test role?
-			 # There is a list of HTTP requests and responses
-			 my $req_iter = $model->get_list($graph_id, $req_head);
-			 while (my $req_subject = $req_iter->next) {
+		  if ($pairs_head) {
+			 # There exists a list of HTTP requests and responses
+			 my $steps_iter = $model->get_list($graph_id, $pairs_head);
+			 while (my $pairs_subject = $steps_iter->next) {
+				warn $pairs_subject->value;
+				my $pairs_bgp = bgp(triplepattern($pairs_subject, iri($ns->test->request->as_string), variable('request')),
+										  triplepattern($pairs_subject, iri($ns->test->response_assertion->as_string), variable('response_assertion')));
+				warn Dumper($pairs_bgp);
+				my $pair_iter = $e->evaluate( $pairs_bgp, $graph_id); # Each row will correspond to one request-response pair
+				my $result;
+				# Within each pair, there will be both requests and responses
 				my $req = HTTP::Request->new;
-				my $req_entry_iter = $model->get_quads($req_subject);
-				while (my $req_data = $req_entry_iter->next) {
-				  my $local_header = $ns->httph->local_part($req_data->predicate);
-				  if ($req_data->predicate->equals($ns->http->method)) {
-					 $req->method($req_data->object->value);
-				  } elsif ($req_data->predicate->equals($ns->http->requestURI)) {
-					 $req->uri($req_data->object->as_string);
-				  } elsif ($req_data->predicate->equals($ns->http->content)) {
-					 if ($req_data->object->is_literal) {
-						$req->content($req_data->object->value); # TODO: might need encoding
-					 } elsif ($req_data->object->is_iri) {
-						my $ua = LWP::UserAgent->new;
-						my $content_response = $ua->get($req_data->object);
-						if ($content_response->is_success) {
-						  $req->content($content_response->decoded_content); # TODO: might need encoding
-						} else {
-						  croak "Could not retrieve content from " . $req_data->object->as_string . " . Got " . $content_response->status_line;
+				my $res = HTTP::Response->new;
+				while (my $pair = $pair_iter->next) {
+				  warn "Req: " . $pair->value('request')->value . " Res: " . $pair->value('response_assertion')->value;
+				  # First, do requests
+				  my $req_entry_iter = $model->get_quads($pair->value('request'));
+				  while (my $req_data = $req_entry_iter->next) {
+					 my $local_header = $ns->httph->local_part($req_data->predicate);
+					 if ($req_data->predicate->equals($ns->http->method)) {
+						$req->method($req_data->object->value);
+					 } elsif ($req_data->predicate->equals($ns->http->requestURI)) {
+						$req->uri($req_data->object->as_string);
+					 } elsif ($req_data->predicate->equals($ns->http->content)) {
+						if ($req_data->object->is_literal) {
+						  $req->content($req_data->object->value); # TODO: might need encoding
+						} elsif ($req_data->object->is_iri) {
+						  # If the http:content predicate points to a IRI, the framework will retrieve content from there
+						  my $ua = LWP::UserAgent->new;
+						  my $content_response = $ua->get($req_data->object);
+						  if ($content_response->is_success) {
+							 $req->content($content_response->decoded_content); # TODO: might need encoding
+						  } else {
+							 croak "Could not retrieve content from " . $req_data->object->as_string . " . Got " . $content_response->status_line;
+						  }
+						}
+					 } elsif (defined($local_header)) {
+						$req->push_header(_find_header($local_header) => $req_data->object->value);
+					 }
+				  }
+
+				  # Now, do asserted responses
+				  my $res_entry_iter = $model->get_quads($pair->value('response_assertion'));
+				  my $regex_headers = {};
+				  while (my $res_data = $res_entry_iter->next) {
+					 my $local_header = $ns->httph->local_part($res_data->predicate);
+					 if ($res_data->predicate->equals($ns->http->status)) {
+						$res->code($res_data->object->value);
+					 } elsif (defined($local_header)) {
+						my $cleaned_header = _find_header($local_header);
+						$res->push_header($cleaned_header => $res_data->object->value);
+						if ($res_data->object->is_literal && $res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
+						  $regex_headers->{$cleaned_header} = 1;
 						}
 					 }
-				  } elsif (defined($local_header)) {
-					 $req->push_header(_find_header($local_header) => $req_data->object->value);
 				  }
 				}
-				push(@requests, $req);
+				$result = { 'request' => $req,
+								'response' => $res,
+							 };#				'regex_headers' => $regex_headers };
+				
+				push(@pairs, $result);
 			 }
-			 $params->{'-special'}->{'http-requests'} = \@requests;
-
-			 my $res_iter = $model->get_list($graph_id, $res_head);
-			 while (my $res_subject = $res_iter->next) {
-				my $res = HTTP::Response->new;
-				my $res_entry_iter = $model->get_quads($res_subject);
-				my $regex_headers = {};
-				while (my $res_data = $res_entry_iter->next) {
-				  my $local_header = $ns->httph->local_part($res_data->predicate);
-				  if ($res_data->predicate->equals($ns->http->status)) {
-					 $res->code($res_data->object->value);
-				  } elsif (defined($local_header)) {
-					 my $cleaned_header = _find_header($local_header);
-					 $res->push_header($cleaned_header => $res_data->object->value);
-					 if ($res_data->object->is_literal && $res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
-						$regex_headers->{$cleaned_header} = 1;
-					 }
-				  }
-				}
-				push(@regexps, $regex_headers);
-				push(@responses, $res);
-			 }
-			 $params->{'-special'}->{'http-responses'} = \@responses;
-			 $params->{'-special'}->{'regex-fields'} = \@regexps;
+			 $params->{'-special'}->{'http-pairs'} = \@pairs;
 		  }
 		  if ($param->object->is_literal || $param->object->is_iri) {
 			 my $key = $param->predicate->as_string;
