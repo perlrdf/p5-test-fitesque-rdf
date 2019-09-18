@@ -102,7 +102,7 @@ sub transform_rdf {
 							  triplepattern($test_uri, iri($ns->test->purpose->as_string), variable('description')),
 							  triplepattern($test_uri, iri($ns->test->params->as_string), variable('paramid')));
 
-	 my $e = Attean::SimpleQueryEvaluator->new( model => $model, default_graph => $graph_id );
+	 my $e = Attean::SimpleQueryEvaluator->new( model => $model, default_graph => $graph_id, ground_blanks => 1 );
 	 my $test_iter = $e->evaluate( $test_bgp, $graph_id); # Each row will correspond to one test
 
 	 while (my $test = $test_iter->next) {
@@ -120,17 +120,14 @@ sub transform_rdf {
 			 # There exists a list of HTTP requests and responses
 			 my $steps_iter = $model->get_list($graph_id, $pairs_head);
 			 while (my $pairs_subject = $steps_iter->next) {
-				warn $pairs_subject->value;
 				my $pairs_bgp = bgp(triplepattern($pairs_subject, iri($ns->test->request->as_string), variable('request')),
 										  triplepattern($pairs_subject, iri($ns->test->response_assertion->as_string), variable('response_assertion')));
-				warn Dumper($pairs_bgp);
 				my $pair_iter = $e->evaluate( $pairs_bgp, $graph_id); # Each row will correspond to one request-response pair
 				my $result;
 				# Within each pair, there will be both requests and responses
 				my $req = HTTP::Request->new;
 				my $res = HTTP::Response->new;
 				while (my $pair = $pair_iter->next) {
-				  warn "Req: " . $pair->value('request')->value . " Res: " . $pair->value('response_assertion')->value;
 				  # First, do requests
 				  my $req_entry_iter = $model->get_quads($pair->value('request'));
 				  while (my $req_data = $req_entry_iter->next) {
