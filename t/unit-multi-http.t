@@ -48,12 +48,12 @@ my $put_expect = [
 										'http-pairs' =>
 										[
 										 {
-										  'regex-fields' => {}
+										  'regex-fields' => {},
 										  'request' => methods(method => 'PUT'),
 										  'response' => methods(code => '201'),
 										 },
 										 {
-										  'regex-fields' => {}
+										  'regex-fields' => {},
 										  'request' => methods(method => 'GET'),
 										  'response' => isa('HTTP::Response')
 										 }
@@ -73,7 +73,7 @@ my $cors_expect = [
 										 'http-pairs' =>
 										 [
 										  {
-											'regex-fields' => {}
+											'regex-fields' => {},
 											'request' => methods(method => 'GET'),
 											'response' => isa('HTTP::Response')
 										  }
