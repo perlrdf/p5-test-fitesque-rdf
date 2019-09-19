@@ -58,7 +58,7 @@ cmp_deeply($data,
 										'http-pairs' =>
 										[
 										 {
-										# 'regex-fields' => ignore(),
+										  'regex-fields' => {},
 										  'request' => methods(method => 'GET'),
 										  'response' => isa('HTTP::Response'),
 										 }

@@ -88,7 +88,7 @@ my $params = $data->[0]->[1]->[1]->{'-special'}->{'http-pairs'};
 
 is(scalar @{$params}, 3, 'There are three pairs');
 
-like(${$params}[0]->header('Link'), qr|;\\s|, 'Should be single escaped');
+like($params->[0]->{response}->header('Link'), qr|;\\s|, 'Should be single escaped');
 
 done_testing;
 
