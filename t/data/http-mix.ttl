@@ -15,8 +15,12 @@
     test:param_base <http://example.org/my-parameters#> ;
     test:params [
         my:user "alice" ;
-        test:requests ( <#public-writeread-unauthn-alt-get-req> ) ;
-        test:responses ( <#public-writeread-unauthn-alt-get-res> ) 
+        test:steps (
+            [
+                test:request <#public-writeread-unauthn-alt-get-req> ;
+                test:response_assertion <#public-writeread-unauthn-alt-get-res>
+            ]
+        )
     ] .
 
 
