@@ -127,6 +127,7 @@ sub transform_rdf {
 				# Within each pair, there will be both requests and responses
 				my $req = HTTP::Request->new;
 				my $res = HTTP::Response->new;
+				my $regex_headers = {};
 				while (my $pair = $pair_iter->next) {
 				  # First, do requests
 				  my $req_entry_iter = $model->get_quads($pair->value('request'));
@@ -156,7 +157,6 @@ sub transform_rdf {
 
 				  # Now, do asserted responses
 				  my $res_entry_iter = $model->get_quads($pair->value('response_assertion'));
-				  my $regex_headers = {};
 				  while (my $res_data = $res_entry_iter->next) {
 					 my $local_header = $ns->httph->local_part($res_data->predicate);
 					 if ($res_data->predicate->equals($ns->http->status)) {
@@ -172,7 +172,7 @@ sub transform_rdf {
 				}
 				$result = { 'request' => $req,
 								'response' => $res,
-							 };#				'regex_headers' => $regex_headers };
+								'regex-fields' => $regex_headers };
 				
 				push(@pairs, $result);
 			 }
