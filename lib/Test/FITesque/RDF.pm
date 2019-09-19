@@ -324,8 +324,7 @@ C<description> key in this hashref.
 
 =head2 RDF EXAMPLE
 
-The below example starts with prefix declarations. Since this is a
-pre-release, some of the prefixes are preliminary examples. Then, the
+The below example starts with prefix declarations. Then, the
 tests in the fixture table are listed explicitly. Only tests mentioned
 using the C<test:fixtures> predicate will be used. Tests may be an RDF
 List, in which case, the tests will run in the specified sequence, if
@@ -349,9 +348,12 @@ lists of HTTP request-response objects. Both mechanisms may be used.
 The key of the hashref passed as arguments will be the local part of
 the predicate used in the description (i.e. the part after the colon
 in e.g. C<my:all>). It is up to the test writer to mint the URIs of
-the parameters, and the C<param_base> is used to set indicate the
-namespace, so that the local part can be resolved, if wanted. The
-resolution itself happens in L<URI::NamespaceMap>.
+the parameters.
+
+The test writer may optionally use a C<param_base> to indicate the
+namespace, in which case the the local part is resolved by the
+framework, using L<URI::NamespaceMap>. If C<param_base> is not given,
+the full URI will be passed to the test script.
 
 
  @prefix test: <http://ontologi.es/doap-tests#> .
@@ -394,18 +396,104 @@ resolution itself happens in L<URI::NamespaceMap>.
 =head3 HTTP request-response lists
 
 To allow testing HTTP-based interfaces, this module also allows the
-construction of two ordered lists, one with HTTP requests, the other
-with HTTP responses. With those, the framework will construct
-L<HTTP::Request> and L<HTTP::Response> objects respectively. In tests
-scripts, the request objects will typically be passed to the
-L<LWP::UserAgent> as input, and then the response from the remote
-server will be compared with the expected L<HTTP::Response>s made by
-the test fixture. These will then be passed as arrayrefs below the
-C<-special> key with the keys C<http-requests> and C<http-responses>
-respectively.
+construction of an ordered list of HTTP requests and response pairs.
+With those, the framework will construct L<HTTP::Request> and
+L<HTTP::Response> objects. In tests scripts, the request
+objects will typically be passed to the L<LWP::UserAgent> as input,
+and then the response from the remote server will be compared with the
+asserted L<HTTP::Response>s made by the test fixture.
 
-This gets more complex, please see the test data file
-C<t/data/http-list.ttl> file for example.
+We will go through an example in chunks:
+
+ @prefix test: <http://ontologi.es/doap-tests#> .
+ @prefix deps: <http://ontologi.es/doap-deps#>.
+ @prefix httph:<http://www.w3.org/2007/ont/httph#> .
+ @prefix http: <http://www.w3.org/2007/ont/http#> .
+ @prefix nfo:  <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#> .
+ @prefix :     <http://example.org/test#> .
+
+ :test_list a test:FixtureTable ;
+    test:fixtures :public_writeread_unauthn_alt .
+
+ :public_writeread_unauthn_alt a test:AutomatedTest ;
+    test:purpose "To test if we can write first using HTTP PUT then read with GET"@en ;
+    test:test_script <http://example.org/httplist#http_req_res_list_unauthenticated> ;
+    test:params [
+        test:steps (
+            [
+                test:request :public_writeread_unauthn_alt_put_req ;
+                test:response_assertion :public_writeread_unauthn_alt_put_res
+            ]
+            [
+                test:request :public_writeread_unauthn_alt_get_req ;
+                test:response_assertion :public_writeread_unauthn_alt_get_res
+            ]
+        )
+    ] .
+
+ <http://example.org/httplist#http_req_res_list_unauthenticated> a nfo:SoftwareItem ;
+    deps:test-requirement "Example::Fixture::HTTPList"^^deps:CpanId ;
+    nfo:definesFunction "http_req_res_list_unauthenticated" .
+
+
+
+In the above, after the prefixes, a single test is declared using the
+C<test:fixtures> predicate, linking to a description of the test. The
+test is then described as an <test:AutomatedTest>, and it's purpose is
+declared. It then links to its concrete implementation, which is given
+in the last three triples in the above.
+
+Then, the parameterization is started. In this example, there are two
+HTTP request-response pairs, which are given as a list object to the
+C<test:steps> predicate.
+
+To link the request, the C<test:request> predicate is used, to link
+the asserted response, the C<test:response_assertion> predicate is
+used.
+
+Next, we look into the actual request and response messages linked from the above:
+
+ :public_writeread_unauthn_alt_put_req a http:RequestMessage ;
+    http:method "PUT" ;
+    httph:content_type "text/turtle" ;
+    http:content "</public/foobar.ttl#dahut> a <http://example.org/Cryptid> ." ;
+    http:requestURI </public/foobar.ttl> .
+
+ :public_writeread_unauthn_alt_put_res a http:ResponseMessage ;
+    http:status 201 .
+
+ :public_writeread_unauthn_alt_get_req a http:RequestMessage ;
+    http:method "GET" ;
+    http:requestURI </public/foobar.ttl> .
+
+ :public_writeread_unauthn_alt_get_res a http:ResponseMessage ;
+    httph:accept_post  "text/turtle", "application/ld+json" ;
+    httph:content_type "text/turtle" .
+
+These should be self-explanatory, but note that headers are given with
+lower-case names and underscores. They will be transformed to headers
+by replacing underscores with dashes and upcase the first letters.
+
+This module will transform the above to data structures that are
+suitable to be passed to L<Test::Fitesque>, and the above will appear as
+
+ {
+	'-special' => {
+						'http-pairs' => [
+                                   {
+										      'request'  => ... ,
+										      'response' => ... ,
+                                   },
+                                   { ... }
+                                  ]
+										 },
+						'description' => 'To test if we can write first using HTTP PUT then read with GET'
+					  },
+ }
+
+
+Note that there are more examples in this module's test suite in the
+C<t/data/> directory.
 
 You may maintain client state in a test script (i.e. for one
 C<test:AutomatedTest>, as it is simply one script, so the result of
@@ -424,7 +512,7 @@ for example:
 
 This makes it possible to use a Perl regular expression, which can be
 executed in a test script if desired. If present, it will supply
-another arrayref to the C<-special> key with the key C<regex-fields>
+another hashref to the C<http-pairs> key with the key C<regex-fields>
 containing hashrefs with the header field that had a correspondiing
 object datatyped regex as key and simply C<1> as value.
 
