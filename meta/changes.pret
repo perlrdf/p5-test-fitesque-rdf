@@ -1,5 +1,14 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.013_01 cpan:KJETILK`
+    issued  2019-09-23;
+    label   "Improve the RDF" ;
+    changeset [
+        dcs:versus `Test-FITesque-RDF 0.012 cpan:KJETILK`;
+        item [ rdfs:label "Improve documentation."; a dcs:Documentation; ] ;
+	item [ rdfs:label "Restructure HTTP request-response pair parameterization."; a dcs:BackCompat; ]
+    ] .
+
 `Test-FITesque-RDF 0.012 cpan:KJETILK`
     issued  2019-08-26;
     label   "Passing URIs as parameters" ;
