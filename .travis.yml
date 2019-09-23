@@ -1,3 +1,7 @@
+os:
+  - linux
+  - osx
+  - windows
 language: perl
 perl:
   - "5.14"
