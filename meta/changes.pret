@@ -1,6 +1,6 @@
 # This file acts as the project's changelog.
 
-`Test-FITesque-RDF 0.013_01 cpan:KJETILK`
+`Test-FITesque-RDF 0.014 cpan:KJETILK`
     issued  2019-09-23;
     label   "Improve the RDF" ;
     changeset [
