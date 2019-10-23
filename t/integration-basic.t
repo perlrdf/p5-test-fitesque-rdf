@@ -32,14 +32,14 @@ use Test::FITesque::Test;
 
 use lib 't/lib';
 
-my $file = $Bin . '/data/multi.ttl';
+use_ok('Test::FITesque::RDF');
 
-use Test::FITesque::RDF;
-
-my $suite = Test::FITesque::RDF->new(source => $file)->suite;
-
-$suite->run_tests;
-
+subtest 'Test multiple tests' => sub {
+  my $file = $Bin . '/data/multi.ttl';
+  my $suite = Test::FITesque::RDF->new(source => $file)->suite;
+  $suite->run_tests;
+};
+  
 done_testing;
   
 
