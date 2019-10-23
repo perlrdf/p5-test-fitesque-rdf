@@ -39,7 +39,7 @@ subtest 'Run with no file' => sub {
   like(
 		 exception { my $suite = Test::FITesque::RDF->new(source => undef)->suite },
 		 qr/Undef did not pass type constraint "Path"/,
-		 'Failed correctly'
+		 'Failed due to missing file'
 		)
 };
 
