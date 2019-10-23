@@ -43,6 +43,15 @@ subtest 'Run with no file' => sub {
 		)
 };
 
+subtest 'Run with invalid file' => sub {
+  my $file = $Bin . '/data/invalid.ttl';
+  like(
+		 exception { my $suite = Test::FITesque::RDF->new(source => $file)->suite },
+		 qr|Failed to parse \S+/t/data/invalid.ttl due to|,
+		 'Failed correctly due to parse error'
+		)
+};
+
 
 subtest 'Test multiple tests' => sub {
   my $file = $Bin . '/data/multi.ttl';
