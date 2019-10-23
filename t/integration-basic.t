@@ -26,6 +26,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Modern;
 use FindBin qw($Bin);
 use Test::FITesque;
 use Test::FITesque::Test;
@@ -33,6 +34,15 @@ use Test::FITesque::Test;
 use lib 't/lib';
 
 use_ok('Test::FITesque::RDF');
+
+subtest 'Run with no file' => sub {
+  like(
+		 exception { my $suite = Test::FITesque::RDF->new(source => undef)->suite },
+		 qr/Undef did not pass type constraint "Path"/,
+		 'Failed correctly'
+		)
+};
+
 
 subtest 'Test multiple tests' => sub {
   my $file = $Bin . '/data/multi.ttl';
