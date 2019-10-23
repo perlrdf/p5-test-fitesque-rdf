@@ -57,7 +57,7 @@ subtest 'Run with no tests file' => sub {
   like(
 		 exception { my $suite = Test::FITesque::RDF->new(source => $file)->suite },
 		 qr|No tests found in \S+t/data/notests.ttl|,
-		 'Failed correctly due to parse error'
+		 'Failed correctly due to no test error'
 		)
 };
 
