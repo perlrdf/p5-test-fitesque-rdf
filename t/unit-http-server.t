@@ -31,6 +31,7 @@ my $base_url = $server->url;
 use Test::Modern;
 use Test::Deep;
 use FindBin qw($Bin);
+use Path::Tiny qw(tempfile path);
 use Data::Dumper;
 
 use Test::FITesque::RDF;
@@ -49,56 +50,58 @@ subtest 'Invalid remote source' => sub {
 		 'Failed to get from invalid host');
 };
 
-done_testing;
-exit 1;
-my $data;
+subtest 'Get content remotely' => sub {
+  my $file = path($Bin . '/data/http-external-content.ttl');
+  my $ttl = $file->slurp_utf8;
+  $ttl =~ s|urn:some_content_to_put|$base_url|;
+  my $tempfile = tempfile(suffix => '.ttl');
+  my $fh = $tempfile->openw_utf8;
+  print $fh $ttl;
+  close $fh;
+  my $t = object_ok(
+						  sub { Test::FITesque::RDF->new(source => $tempfile) }, 'RDF Fixture object',
+						  isa => [qw(Test::FITesque::RDF Moo::Object)],
+						  can => [qw(source suite transform_rdf)]);
+
+  my $data = $t->transform_rdf;
+
+  cmp_deeply($data,
+				 [
+				  [
+					[
+					 'Internal::Fixture::HTTPList'
+					],
+					[
+					 'http_req_res_list_unauthenticated',
+					 {
+					  '-special' => {
+										  'http-pairs' => ignore(),
+										'description' => 'Test for content on external URL that is invalid'
+										 },
+					 }
+					]
+				  ]
+				 ], 'Main structure ok');
   
-cmp_deeply($data,
-[
-          [
-            [
-              'Internal::Fixture::HTTPList'
-            ],
-            [
-              'http_req_res_list_unauthenticated',
-              {
-					'-special' => {
-										'http-pairs' => ignore(),
-										'description' => 'More elaborate HTTP vocab for PUT then GET test'
-									  },
-              }
-            ]
-          ]
-        ], 'Main structure ok');
+  my $params = $data->[0]->[1]->[1]->{'-special'};
+  
+  is(scalar @{$params->{'http-pairs'}}, 1, 'There is request-response pair');
 
-my $params = $data->[0]->[1]->[1]->{'-special'};
-
-is(scalar @{$params->{'http-pairs'}}, 2, 'There are two request-response pairs');
-
-foreach my $pair (@{$params->{'http-pairs'}}) {
-  object_ok($pair->{request}, 'Checking request object',
-				isa => ['HTTP::Request'],
-				can => [qw(method uri headers content)]
-			  );
-  object_ok($pair->{response}, 'Checking response object',
-				isa => ['HTTP::Response'],
-				can => [qw(code headers)]
-			  );
-}
-
-is(${$params->{'http-pairs'}}[0]->{request}->method, 'PUT', 'First method is PUT');
-is(${$params->{'http-pairs'}}[1]->{request}->method, 'GET', 'Second method is GET');
-
-like(${$params->{'http-pairs'}}[0]->{request}->content, qr/dahut/, 'First request has content');
-
-
-is(${$params->{'http-pairs'}}[0]->{response}->code, '201', 'First code is 201');
-is(${$params->{'http-pairs'}}[1]->{response}->content_type, 'text/turtle', 'Second ctype is turtle');
-
-cmp_deeply([${$params->{'http-pairs'}}[1]->{response}->header('Content-Type')], bag("text/turtle"), 'Response header field value bag comparison can be used for single values');
-cmp_deeply([${$params->{'http-pairs'}}[1]->{response}->header('Accept-Post')], bag("text/turtle", "application/ld+json"), 'Response header field value bag comparison');
-
-# TODO: Test retrieving content from URI
-
+  foreach my $pair (@{$params->{'http-pairs'}}) {
+	 object_ok($pair->{request}, 'Checking request object',
+				  isa => ['HTTP::Request'],
+				  can => [qw(method uri headers content)]
+				 );
+	 object_ok($pair->{response}, 'Checking response object',
+				  isa => ['HTTP::Response'],
+				  can => [qw(code headers)]
+				 );
+  }
+  
+  is(${$params->{'http-pairs'}}[0]->{request}->method, 'PUT', 'First method is PUT');
+  
+  like(${$params->{'http-pairs'}}[0]->{request}->content, qr/foo/, 'First request has content');
+};
+  
 done_testing;
 
