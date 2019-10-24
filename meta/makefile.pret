@@ -6,6 +6,7 @@
     :test-requirement       [ :on "Test::More 0.96"^^:CpanId ];
     :test-requirement       [ :on "Test::Modern"^^:CpanId ];
     :test-requirement       [ :on "Test::Deep"^^:CpanId ];
+    :test-requirement       [ :on "Test::HTTP::LocalServer"^^:CpanId ];		
     :test-requirement       [ :on "FindBin"^^:CpanId ];
     :runtime-requirement    [ :on "perl 5.014"^^:CpanId ];
     :runtime-requirement    [ :on "LWP::UserAgent"^^:CpanId ];
