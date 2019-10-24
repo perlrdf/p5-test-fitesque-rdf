@@ -143,7 +143,7 @@ sub transform_rdf {
 						} elsif ($req_data->object->is_iri) {
 						  # If the http:content predicate points to a IRI, the framework will retrieve content from there
 						  my $ua = LWP::UserAgent->new;
-						  my $content_response = $ua->get($req_data->object);
+						  my $content_response = $ua->get(URI->new($req_data->object->as_string));
 						  if ($content_response->is_success) {
 							 $req->content($content_response->decoded_content); # TODO: might need encoding
 						  } else {

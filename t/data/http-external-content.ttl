@@ -1,5 +1,6 @@
 @prefix test: <http://ontologi.es/doap-tests#> .
 @prefix deps: <http://ontologi.es/doap-deps#>.
+@prefix dc:   <http://purl.org/dc/terms/> .
 @prefix httph:<http://www.w3.org/2007/ont/httph#> .
 @prefix http: <http://www.w3.org/2007/ont/http#> .
 @prefix nfo:  <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#> .
@@ -7,41 +8,52 @@
 
 
 :test_list a test:FixtureTable ;
-    test:fixtures :public_writeread_unauthn_alt .
+    test:fixtures ( :invalid_url :html_content ).
 
 
-:public_writeread_unauthn_alt a test:AutomatedTest ;
-    test:purpose "More elaborate HTTP vocab for PUT then GET test"@en ;
+:invalid_url a test:AutomatedTest  ;
+    test:purpose "Test for content on external URL that is invalid"@en ;
     test:test_script <http://example.org/httplist#http_req_res_list_unauthenticated> ;
     test:params [
         test:steps (
             [
-                test:request :public_writeread_unauthn_alt_put_req ;
-                test:response_assertion :public_writeread_unauthn_alt_put_res
-            ]
-            [
-                test:request :public_writeread_unauthn_alt_get_req ;
-                test:response_assertion :public_writeread_unauthn_alt_get_res
+                test:request :invalid_url_req ;
+                test:response_assertion :invalid_url_res
             ]
         )
     ] .
 
 
-:public_writeread_unauthn_alt_put_req a http:RequestMessage ;
+:invalid_url_req a http:RequestMessage ;
     http:method "PUT" ;
     httph:content_type "text/turtle" ;
-    http:content "</public/foobar.ttl#dahut> a <http://example.org/Cryptid> ." ;
+    http:content <http://example.invalid/dahut> ;
     http:requestURI </public/foobar.ttl> .
 
-:public_writeread_unauthn_alt_put_res a http:ResponseMessage ;
-    http:status 201 .
+:invalid_url_res a http:ResponseMessage ;
+    http:status 500 .
 
-:public_writeread_unauthn_alt_get_req a http:RequestMessage ;
+
+<#public-cors-origin-set> a test:AutomatedTest  ;
+    test:purpose "Testing CORS header when Origin is supplied by client"@en ;
+    test:test_script <http://example.org/httplist#http_req_res_list_unauthenticated> ;
+    test:params [
+        test:steps (
+            [
+                test:request <#public-cors-origin-set-req> ;
+                test:response_assertion <#public-cors-origin-set-res>
+            ]
+        )
+    ] .
+
+<#public-cors-origin-set-req> a http:RequestMessage ;
     http:method "GET" ;
-    http:requestURI </public/foobar.ttl> .
+    httph:origin <https://app.example> ;
+    http:requestURI </public/verypublic/foobar.ttl> .
 
-:public_writeread_unauthn_alt_get_res a http:ResponseMessage ;
-    httph:accept_post  "text/turtle", "application/ld+json" ;
+<#public-cors-origin-set-res> a http:ResponseMessage ;
+    http:status 200 ;
+    httph:access_control_allow_origin <https://app.example> ;
     httph:content_type "text/turtle" .
 
 

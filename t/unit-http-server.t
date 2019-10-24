@@ -24,39 +24,19 @@ This is free software, licensed under:
 use strict;
 use warnings;
 
-use Test::HTTP::MockServer;
- 
-my $server = Test::HTTP::MockServer->new();
-my $url = $server->url_base();
- 
-my $handle_request_phase1 = sub {
-    my ($request, $response) = @_;
-    use Data::Dumper;
-	 warn Dumper($response);
-  };
+use Test::HTTP::LocalServer;
+my $server = Test::HTTP::LocalServer->spawn(html => 'foo');
+my $base_url = $server->url;
 
-$server->start_mock_server($handle_request_phase1);
-
-my $ua = LWP::UserAgent->new;
-my $content_response = $ua->get('/foo');
-
-
-$server->stop_mock_server();
-
-
- 
 use Test::Modern;
 use Test::Deep;
 use FindBin qw($Bin);
 use Data::Dumper;
 
-my $s = My::WebServer->new;
 
-my $url_root = $s->started_ok("start up my web server");
+my $file = $Bin . '/data/http-external-content.ttl';
 
-warn $url_root;
 
-my $file = $Bin . '/data/http-list.ttl';
 
 use Test::FITesque::RDF;
 
@@ -69,7 +49,14 @@ my $t = object_ok(
 
 
 
-my $data = $t->transform_rdf;
+my $data;
+like(
+	  exception { $data = $t->transform_rdf; },
+	  qr|Could not retrieve content from http://example.invalid/dahut . Got 500|,
+	  'Failed to get from invalid host');
+	  
+
+
 
 cmp_deeply($data,
 [
