@@ -102,6 +102,22 @@ subtest 'Get content remotely' => sub {
   
   like(${$params->{'http-pairs'}}[0]->{request}->content, qr/foo/, 'First request has content');
 };
-  
+
+
+subtest 'Remote source with blank node' => sub {
+  my $file = $Bin . '/data/http-external-content-blank.ttl';
+  my $t = object_ok(
+						  sub { Test::FITesque::RDF->new(source => $file) }, 'RDF Fixture object',
+						  isa => [qw(Test::FITesque::RDF Moo::Object)],
+						  can => [qw(source suite transform_rdf)]);
+
+  like(
+		 exception { my $data = $t->transform_rdf; },
+		 qr|Unsupported object _:foo in \S+/http-external-content-blank.ttl|,
+		 'Blank node is unsupported');
+};
+
+
+
 done_testing;
 

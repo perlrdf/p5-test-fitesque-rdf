@@ -149,6 +149,8 @@ sub transform_rdf {
 						  } else {
 							 croak "Could not retrieve content from " . $req_data->object->as_string . " . Got " . $content_response->status_line;
 						  }
+						} else {
+						  croak 'Unsupported object ' . $req_data->object->as_string . " in " . $self->source;
 						}
 					 } elsif (defined($local_header)) {
 						$req->push_header(_find_header($local_header) => $req_data->object->value);
