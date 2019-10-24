@@ -26,7 +26,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Modern;
+use Test::Modern qw(-more -fatal -warnings -deeper);
 use FindBin qw($Bin);
 use Test::FITesque;
 use Test::FITesque::Test;
@@ -60,6 +60,17 @@ subtest 'Run with no tests file' => sub {
 		 'Failed correctly due to no test error'
 		)
 };
+
+subtest 'Run with no descriptions in file' => sub {
+  my $file = $Bin . '/data/undescribed.ttl';
+  my @expect = (ignore(), ignore()); # TODO: Improve pattern matching
+  cmp_deeply(
+				 warning { my $suite = Test::FITesque::RDF->new(source => $file)->suite },
+				 bag(@expect),
+				 'Failed correctly due to undescribed test error'
+				)
+};
+
 
 
 subtest 'Test multiple tests' => sub {
