@@ -8,7 +8,7 @@
 
 
 :test_list a test:FixtureTable ;
-    test:fixtures ( :invalid_url :html_content ).
+    test:fixtures ( :invalid_url ).
 
 
 :invalid_url a test:AutomatedTest  ;

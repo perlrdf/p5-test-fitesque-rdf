@@ -33,31 +33,26 @@ use Test::Deep;
 use FindBin qw($Bin);
 use Data::Dumper;
 
-
-my $file = $Bin . '/data/http-external-content.ttl';
-
-
-
 use Test::FITesque::RDF;
 
 
-my $t = object_ok(
-						sub { Test::FITesque::RDF->new(source => $file) }, 'RDF Fixture object',
-						isa => [qw(Test::FITesque::RDF Moo::Object)],
-						can => [qw(source suite transform_rdf)]);
+subtest 'Invalid remote source' => sub {
+  my $file = $Bin . '/data/http-external-content-invalid.ttl';
+  my $t = object_ok(
+						  sub { Test::FITesque::RDF->new(source => $file) }, 'RDF Fixture object',
+						  isa => [qw(Test::FITesque::RDF Moo::Object)],
+						  can => [qw(source suite transform_rdf)]);
 
+  like(
+		 exception { my $data = $t->transform_rdf; },
+		 qr|Could not retrieve content from http://example.invalid/dahut . Got 500|,
+		 'Failed to get from invalid host');
+};
 
-
-
+done_testing;
+exit 1;
 my $data;
-like(
-	  exception { $data = $t->transform_rdf; },
-	  qr|Could not retrieve content from http://example.invalid/dahut . Got 500|,
-	  'Failed to get from invalid host');
-	  
-
-
-warn Dumper($data);
+  
 cmp_deeply($data,
 [
           [
