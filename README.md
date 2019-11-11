@@ -7,7 +7,28 @@ Test::FITesque::RDF - Formulate Test::FITesque fixture tables in RDF
     my $suite = Test::FITesque::RDF->new(source => $file)->suite;
     $suite->run_tests;
 
-See `t/integration-basic.t` for a full test script example.
+See `t/integration-basic.t` for a full test script example using this simplest way. 
+
+To run a single test script with several fixture tables, you can
+either add the tests to a suite, like this:
+
+    my @files = ('test1.ttl','test2.ttl');
+    my $suite = Test::FITesque::Suite->new;
+
+    foreach my $file (@files) {
+      $suite->add(Test::FITesque::RDF->new(source => $path . $file)->suite);
+    }
+    $suite->run_tests;
+
+or iterate and run the tests for each fixture table like this:
+
+    my @files = ('test1.ttl','test2.ttl');
+
+    foreach my $file (@files) {
+      diag("Reading tests from $path$file");
+      my $suite = Test::FITesque::RDF->new(source => $path . $file)->suite;
+      $suite->run_tests;
+    }
 
 # DESCRIPTION
 
