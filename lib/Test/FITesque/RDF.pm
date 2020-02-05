@@ -532,12 +532,12 @@ fixtures if it writes something into the server, there is nothing in
 the framework that changes that.
 
 To use data from one response to influence subsequent requests, the
-framework supports datatyping literals with the C<dqm:regex> datatype,
-for example:
+framework supports datatyping literals with the C<dqm:regex> datatype
+for headers and HTTP status codes, for example:
 
  :check_acl_location_res a http:ResponseMessage ;
     httph:link '<(.*?)>;\\s+rel="acl"'^^dqm:regex ;
-    http:status 200 .
+    http:status "200|204"^^dqm:regex .
 
 This makes it possible to use a Perl regular expression, which can be
 executed in a test script if desired. If present, it will supply
