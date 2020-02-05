@@ -67,7 +67,7 @@ cmp_deeply($data,
 										 {
 										  'request' => isa("HTTP::Request"),
 										  'response' => isa("HTTP::Response"),
-										  'regex-fields' => {},
+										  'regex-fields' => {'status' => 1},
 										 },
 										 {
 										  'request' => isa("HTTP::Request"),
