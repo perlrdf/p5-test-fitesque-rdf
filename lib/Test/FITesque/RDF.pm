@@ -16,6 +16,7 @@ use Types::Standard qw(InstanceOf);
 use Types::Namespace qw(Iri Namespace);
 use Types::Path::Tiny qw(Path);
 use Types::Attean qw(to_AtteanIRI);
+use Types::URI qw(to_Uri);
 use Carp qw(carp croak);
 use Data::Dumper;
 use HTTP::Request;
@@ -137,14 +138,14 @@ sub transform_rdf {
 					 if ($req_data->predicate->equals($ns->http->method)) {
 						$req->method($req_data->object->value);
 					 } elsif ($req_data->predicate->equals($ns->http->requestURI)) {
-						$req->uri($req_data->object->as_string);
+						$req->uri(to_Uri($req_data->object));
 					 } elsif ($req_data->predicate->equals($ns->http->content)) {
 						if ($req_data->object->is_literal) {
 						  $req->content($req_data->object->value); # TODO: might need encoding
 						} elsif ($req_data->object->is_iri) {
 						  # If the http:content predicate points to a IRI, the framework will retrieve content from there
 						  my $ua = LWP::UserAgent->new;
-						  my $content_response = $ua->get(URI->new($req_data->object->as_string));
+						  my $content_response = $ua->get(to_Uri($req_data->object));
 						  if ($content_response->is_success) {
 							 $req->content($content_response->decoded_content); # TODO: might need encoding
 						  } else {
@@ -191,7 +192,7 @@ sub transform_rdf {
 			 }
 			 my $value = $param->object->value;
 			 if ($param->object->is_iri) {
-				$value = URI->new($param->object->as_string)
+				$value = to_Uri($param->object)
 			 }
 			 $params->{$key} = $value;
 		  }
