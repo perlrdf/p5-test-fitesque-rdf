@@ -162,14 +162,14 @@ sub transform_rdf {
 				  while (my $res_data = $res_entry_iter->next) {
 					 my $local_header = $ns->httph->local_part($res_data->predicate);
 					 if ($res_data->predicate->equals($ns->http->status)) {
-						if ($res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
+						if ($res_data->object->datatype->equals($ns->dqm->regex)) {
 						  $regex_headers->{'status'} = 1;
 						}
 						$res->code($res_data->object->value);
 					 } elsif (defined($local_header)) {
 						my $cleaned_header = _find_header($local_header);
 						$res->push_header($cleaned_header => $res_data->object->value);
-						if ($res_data->object->is_literal && $res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
+						if ($res_data->object->is_literal && $res_data->object->datatype->equals($ns->dqm->regex)) {
 						  $regex_headers->{$cleaned_header} = 1;
 						}
 					 }
