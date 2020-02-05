@@ -90,5 +90,7 @@ is(scalar @{$params}, 3, 'There are three pairs');
 
 like($params->[0]->{response}->header('Link'), qr|;\\s|, 'Should be single escaped');
 
+is($params->[1]->{response}->code, '201|204', 'Status is correct'); #TODO: This could break if underlying framework starts to enforce a format that only includes three-digit status codes
+
 done_testing;
 
