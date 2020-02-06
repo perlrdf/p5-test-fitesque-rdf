@@ -565,7 +565,7 @@ Kjetil Kjernsmo E<lt>kjetilk@cpan.orgE<gt>.
 
 =head1 COPYRIGHT AND LICENCE
 
-This software is Copyright (c) 2019 by Inrupt Inc.
+This software is Copyright (c) 2019, 2020 by Inrupt Inc.
 
 This is free software, licensed under:
 
