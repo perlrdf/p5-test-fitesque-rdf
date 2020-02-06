@@ -1,5 +1,15 @@
 # This file acts as the project's changelog.
 
+`Test-FITesque-RDF 0.018 cpan:KJETILK`
+    issued  2020-02-06;
+    label   "Support different status codes" ;
+    changeset [
+        dcs:versus `Test-FITesque-RDF 0.016 cpan:KJETILK`;
+        item [ rdfs:label "Make it possible to use status as regular expression."; a dcs:Addition; ];
+        item [ rdfs:label "Use the new coercions in Attean."; a dcs:Update; ];
+        item [ rdfs:label "Improve documentation."; a dcs:Change; ]
+    ] .
+
 `Test-FITesque-RDF 0.016 cpan:KJETILK`
     issued  2019-10-28;
     label   "Test coverage to 100%" ;
