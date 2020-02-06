@@ -15,6 +15,8 @@ use Test::FITesque::Test;
 use Types::Standard qw(InstanceOf);
 use Types::Namespace qw(Iri Namespace);
 use Types::Path::Tiny qw(Path);
+use Types::Attean qw(to_AtteanIRI);
+use Types::URI qw(to_Uri);
 use Carp qw(carp croak);
 use Data::Dumper;
 use HTTP::Request;
@@ -75,12 +77,12 @@ sub transform_rdf {
   };
   $model->add_iter($file_iter->as_quads($graph_id));
 
-  my $tests_uri_iter = $model->objects(undef, iri($ns->test->fixtures->as_string))->materialize; # TODO: Implement coercions in Attean
+  my $tests_uri_iter = $model->objects(undef, to_AtteanIRI($ns->test->fixtures))->materialize;
   if (scalar $tests_uri_iter->elements == 0) {
 	 croak "No tests found in " . $self->source;
   }
 
-  if ($model->holds($tests_uri_iter->peek, iri($ns->rdf->first->as_string), undef, $graph_id)) {
+  if ($model->holds($tests_uri_iter->peek, to_AtteanIRI($ns->rdf->first), undef, $graph_id)) {
 	 # Then, the object is a list. This supports either unordered
 	 # objects or lists, not both. This could be changed by iterating
 	 # in the below loop, but I don't see much point to it.
@@ -90,17 +92,17 @@ sub transform_rdf {
 
   while (my $test_uri = $tests_uri_iter->next) {
 	 my @instance;
-	 my $params_base_term = $model->objects($test_uri, iri($ns->test->param_base->as_string))->next;
+	 my $params_base_term = $model->objects($test_uri, to_AtteanIRI($ns->test->param_base))->next;
 	 my $params_base;
 	 if ($params_base_term) {
 		$params_base = URI::Namespace->new($params_base_term);
 		$ns->guess_and_add($params_base);
 	 }
-	 my $test_bgp = bgp(triplepattern($test_uri, iri($ns->test->test_script->as_string), variable('script_class')),
-							  triplepattern(variable('script_class'), iri($ns->deps->iri('test-requirement')->as_string), variable('handler')), # Because Perl doesn't support dashes in method names
-							  triplepattern(variable('script_class'), iri($ns->nfo->definesFunction->as_string), variable('method')),
-							  triplepattern($test_uri, iri($ns->test->purpose->as_string), variable('description')),
-							  triplepattern($test_uri, iri($ns->test->params->as_string), variable('paramid')));
+	 my $test_bgp = bgp(triplepattern($test_uri, to_AtteanIRI($ns->test->test_script), variable('script_class')),
+							  triplepattern(variable('script_class'), to_AtteanIRI($ns->deps->iri('test-requirement')), variable('handler')), # Because Perl doesn't support dashes in method names
+							  triplepattern(variable('script_class'), to_AtteanIRI($ns->nfo->definesFunction), variable('method')),
+							  triplepattern($test_uri, to_AtteanIRI($ns->test->purpose), variable('description')),
+							  triplepattern($test_uri, to_AtteanIRI($ns->test->params), variable('paramid')));
 
 	 my $e = Attean::SimpleQueryEvaluator->new( model => $model, default_graph => $graph_id, ground_blanks => 1 );
 	 my $test_iter = $e->evaluate( $test_bgp, $graph_id); # Each row will correspond to one test
@@ -113,15 +115,15 @@ sub transform_rdf {
 		$params->{'-special'} = {description => $test->value('description')->value}; # Description should always be present
 		while (my $param = $params_iter->next) {
 		  # First, see if there are HTTP request-responses that can be constructed
-		  my $pairs_head = $model->objects($param->subject, iri($ns->test->steps->as_string))->next;
+		  my $pairs_head = $model->objects($param->subject, to_AtteanIRI($ns->test->steps))->next;
 		  my @pairs;
 
 		  if ($pairs_head) {
 			 # There exists a list of HTTP requests and responses
 			 my $steps_iter = $model->get_list($graph_id, $pairs_head);
 			 while (my $pairs_subject = $steps_iter->next) {
-				my $pairs_bgp = bgp(triplepattern($pairs_subject, iri($ns->test->request->as_string), variable('request')),
-										  triplepattern($pairs_subject, iri($ns->test->response_assertion->as_string), variable('response_assertion')));
+				my $pairs_bgp = bgp(triplepattern($pairs_subject, to_AtteanIRI($ns->test->request), variable('request')),
+										  triplepattern($pairs_subject, to_AtteanIRI($ns->test->response_assertion), variable('response_assertion')));
 				my $pair_iter = $e->evaluate( $pairs_bgp, $graph_id); # Each row will correspond to one request-response pair
 				my $result;
 				# Within each pair, there will be both requests and responses
@@ -136,14 +138,14 @@ sub transform_rdf {
 					 if ($req_data->predicate->equals($ns->http->method)) {
 						$req->method($req_data->object->value);
 					 } elsif ($req_data->predicate->equals($ns->http->requestURI)) {
-						$req->uri($req_data->object->as_string);
+						$req->uri(to_Uri($req_data->object));
 					 } elsif ($req_data->predicate->equals($ns->http->content)) {
 						if ($req_data->object->is_literal) {
 						  $req->content($req_data->object->value); # TODO: might need encoding
 						} elsif ($req_data->object->is_iri) {
 						  # If the http:content predicate points to a IRI, the framework will retrieve content from there
 						  my $ua = LWP::UserAgent->new;
-						  my $content_response = $ua->get(URI->new($req_data->object->as_string));
+						  my $content_response = $ua->get(to_Uri($req_data->object));
 						  if ($content_response->is_success) {
 							 $req->content($content_response->decoded_content); # TODO: might need encoding
 						  } else {
@@ -162,14 +164,14 @@ sub transform_rdf {
 				  while (my $res_data = $res_entry_iter->next) {
 					 my $local_header = $ns->httph->local_part($res_data->predicate);
 					 if ($res_data->predicate->equals($ns->http->status)) {
-						if ($res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
+						if ($res_data->object->datatype->equals($ns->dqm->regex)) {
 						  $regex_headers->{'status'} = 1;
 						}
 						$res->code($res_data->object->value);
 					 } elsif (defined($local_header)) {
 						my $cleaned_header = _find_header($local_header);
 						$res->push_header($cleaned_header => $res_data->object->value);
-						if ($res_data->object->is_literal && $res_data->object->datatype->as_string eq $ns->dqm->regex->as_string) { # TODO: don't use string comparison when Attean does the coercion
+						if ($res_data->object->is_literal && $res_data->object->datatype->equals($ns->dqm->regex)) {
 						  $regex_headers->{$cleaned_header} = 1;
 						}
 					 }
@@ -190,7 +192,7 @@ sub transform_rdf {
 			 }
 			 my $value = $param->object->value;
 			 if ($param->object->is_iri) {
-				$value = URI->new($param->object->as_string)
+				$value = to_Uri($param->object)
 			 }
 			 $params->{$key} = $value;
 		  }
