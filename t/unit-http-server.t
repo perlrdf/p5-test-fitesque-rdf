@@ -46,7 +46,7 @@ subtest 'Invalid remote source' => sub {
 
   like(
 		 exception { my $data = $t->transform_rdf; },
-		 qr|Could not retrieve content from http://example.invalid/dahut . Got 500|,
+		 qr|Could not retrieve content from http://example.invalid./dahut . Got 500|,
 		 'Failed to get from invalid host');
 };
 

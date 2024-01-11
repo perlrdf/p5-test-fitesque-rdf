@@ -27,7 +27,7 @@
 :invalid_url_req a http:RequestMessage ;
     http:method "PUT" ;
     httph:content_type "text/turtle" ;
-    http:content <http://example.invalid/dahut> ;
+    http:content <http://example.invalid./dahut> ;
     http:requestURI </public/foobar.ttl> .
 
 :invalid_url_res a http:ResponseMessage ;
