@@ -1,11 +1,11 @@
 # This file acts as the project's changelog.
 
-`Test-FITesque-RDF 0.019_1 cpan:KJETILK`
-    issued  2024-01-11;
+`Test-FITesque-RDF 0.10 cpan:KJETILK`
+    issued  2024-01-13;
     label   "Fix DNS from invalid host" ;
     changeset [
         dcs:versus `Test-FITesque-RDF 0.018 cpan:KJETILK`;
-        item [ rdfs:label "Add . to fix github issue #12."; a dcs:Bugfix; ]
+        item [ rdfs:label "Add . to fix github issue #12."; a dcs:Bugfix; dcs:thanks cpan:SREZIC; ]
     ] .
 
 `Test-FITesque-RDF 0.018 cpan:KJETILK`

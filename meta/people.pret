@@ -11,5 +11,6 @@ cpan:KJETILK
 cpan:KONOBI
     :name  "Scott McWirther" .
     
-
+cpan:SREZIC
+    :name "Slaven Rezić" .
 
